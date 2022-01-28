@@ -1,0 +1,41 @@
+.ingredients {
+    max-width: 600px;
+}
+
+.ingredients__tabs {
+    display: flex;
+    flex-direction: row;
+}
+
+.ingredients__list {
+    list-style-type: none;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.ingredients__scroll {
+    max-height: 664px;
+    overflow-y: auto;
+}
+
+.ingredients__link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    max-width: 272px;
+}
+
+.ingredients__price {
+    display: flex;
+    flex-direction: row;
+    gap: 9px;
+}
+
+.ingredients__title {
+    text-align: center;
+}

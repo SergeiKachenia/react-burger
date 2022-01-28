@@ -1,0 +1,37 @@
+.header {
+    background: #1C1C21;
+}
+
+.header__wrap {
+    max-width: 1240px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    margin: 0 auto;
+    align-items: center;
+}
+
+.header__nav {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin: 0;
+    padding: 0;
+    gap: 50px;
+}
+
+.list {
+    composes: header__nav;
+}
+
+.list__link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+}
+
+.account__link {
+    composes: list__link;
+}
