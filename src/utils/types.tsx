@@ -18,6 +18,7 @@ export const burgerIngredientsPropTypes = PropTypes.shape({
 
 
 export type AppProps = {
+
   _id: string;
   name: string;
   type: string;
@@ -30,6 +31,7 @@ export type AppProps = {
   image_mobile: string;
   image_large: string;
   __v: number;
-};
+  };
+
 
 export {}

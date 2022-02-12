@@ -1,13 +1,11 @@
-import React, { useRef } from "react";
-import {
-  Tab,
-  CurrencyIcon,
-} from "@ya.praktikum/react-developer-burger-ui-components";
+import React, { useRef, useState } from "react";
+import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import IngredientsStyles from "./BurgerIngredients.module.css";
 import { burgerIngredientsPropTypes, AppProps } from "../../utils/types";
 import PropTypes from "prop-types";
 import BurgerIngredient from "../BurgerIngredient/BurgerIngredient";
-
+import Modal from "../Modal/Modal";
+import IngredientDetails from "../IngredientDetails/IngredientDetails";
 function BurgerIngredients(props: any) {
   const [current, setCurrent] = React.useState("bun");
   const bunRef = useRef(null);
@@ -18,7 +16,11 @@ function BurgerIngredients(props: any) {
     setCurrent(e);
     ref.current.scrollIntoView({ behavior: "smooth" });
   };
+  const [isOpened, setIsOpened] = useState(null);
 
+  function toggleModal(item: any) {
+    setIsOpened(item);
+  }
   return (
     <section className={IngredientsStyles.ingredients}>
       <h1 className={"text text_type_main-large mb-5 mt-10"}>
@@ -57,8 +59,13 @@ function BurgerIngredients(props: any) {
             {props.ingredients.map(
               (item: AppProps) =>
                 item.type === "bun" && (
-                  <li key={item._id}>
-                    <BurgerIngredient item={item} />
+                  <li
+                    key={item._id}
+                    onClick={() => {
+                      toggleModal(item);
+                    }}
+                  >
+                    <BurgerIngredient item={item} handler={toggleModal} />
                   </li>
                 )
             )}
@@ -70,8 +77,13 @@ function BurgerIngredients(props: any) {
             {props.ingredients.map(
               (item: AppProps) =>
                 item.type === "sauce" && (
-                  <li key={item._id}>
-                    <BurgerIngredient item={item} />
+                  <li
+                    key={item._id}
+                    onClick={() => {
+                      toggleModal(item);
+                    }}
+                  >
+                    <BurgerIngredient item={item} handler={toggleModal} />
                   </li>
                 )
             )}
@@ -83,14 +95,24 @@ function BurgerIngredients(props: any) {
             {props.ingredients.map(
               (item: AppProps) =>
                 item.type === "main" && (
-                  <li key={item._id}>
-                    <BurgerIngredient item={item} />
+                  <li
+                    key={item._id}
+                    onClick={() => {
+                      toggleModal(item);
+                    }}
+                  >
+                    <BurgerIngredient item={item} handler={toggleModal} />
                   </li>
                 )
             )}
           </ul>
         </section>
       </div>
+      {isOpened && (
+        <Modal onClose={toggleModal} title={"Детали ингредиента"}>
+          <IngredientDetails item={isOpened} />
+        </Modal>
+      )}
     </section>
   );
 }

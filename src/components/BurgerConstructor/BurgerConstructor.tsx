@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   ConstructorElement,
   DragIcon,
@@ -7,19 +7,32 @@ import {
 import ConstructorStyles from "./BurgerConstructor.module.css";
 import { burgerIngredientsPropTypes, AppProps } from "../../utils/types";
 import PropTypes from "prop-types";
+import Modal from "../Modal/Modal";
+import OrderDetails from "../OrderDetails/OrderDetails";
 
 function BurgerConstructor(props: any) {
+  const [isOpened, setIsOpened] = useState(false);
+
+  function toggleModal() {
+    setIsOpened(!isOpened);
+  }
   const totalSum = props.construct.reduce(
     (acc: any, item: AppProps) => acc + item.price,
     0
   );
-  return (
+  return props.construct.length && (
     <section className={`${ConstructorStyles.constructor} mt-25`}>
+      {isOpened && (
+        <Modal onClose={toggleModal}>
+          <OrderDetails />
+        </Modal>
+      )}
+
       <div className={ConstructorStyles.constructor__topitem}>
         <ConstructorElement
           type="top"
           isLocked={true}
-          text={`${props.construct[0].name} (верх)`}
+          text={props.construct[0].name + ' (верх)'}
           price={props.construct[0].price}
           thumbnail={props.construct[0].image}
         />
@@ -29,8 +42,8 @@ function BurgerConstructor(props: any) {
       >
         {props.construct.map(
           (item: AppProps, index: number) =>
-            index > 1 &&
-            index < props.construct.length && (
+            index > 0 &&
+            index < props.construct.length - 1 && (
               <li
                 className={ConstructorStyles.constructor__listitem}
                 key={item._id + index}
@@ -49,9 +62,9 @@ function BurgerConstructor(props: any) {
         <ConstructorElement
           type="bottom"
           isLocked={true}
-          text={`${props.construct[1].name} (низ)`}
-          price={props.construct[1].price}
-          thumbnail={props.construct[1].image}
+          text={props.construct[0].name + ' (низ)'}
+          price={props.construct[0].price}
+          thumbnail={props.construct[0].image}
         />
       </div>
       <section className={`${ConstructorStyles.constructor__totalsum} mt-10`}>
@@ -88,10 +101,11 @@ function BurgerConstructor(props: any) {
             </svg>
           </span>
         </div>
-        <Button type="primary" size="medium">
+        <Button type="primary" size="medium" onClick={toggleModal}>
           <span className="text text_type_main-default">Оформить заказ</span>
         </Button>
       </section>
+
     </section>
   );
 }
