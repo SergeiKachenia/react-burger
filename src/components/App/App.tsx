@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import ReactDOM from "react-dom";
 import AppHeader from "../AppHeader/AppHeader";
 import AppStyles from "./App.module.css";
 import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
@@ -19,7 +18,7 @@ function App() {
         if (!res.ok) {
           throw new Error(`Error status - ${res.status}`);
         }
-        let actualData = await res.json();
+        const actualData = await res.json();
         setIngredientsData(actualData.data);
         setError(null);
       } catch (error: any) {

@@ -1,5 +1,4 @@
 import React from "react";
-import { burgerIngredientsPropTypes, AppProps } from "../../utils/types";
 import PropTypes from "prop-types";
 import OverlayStyles from "./ModalOverlay.module.css";
 
@@ -15,3 +14,8 @@ function ModalOverlay(props: any) {
 }
 
 export default ModalOverlay;
+
+
+ModalOverlay.propTypes = {
+  onClose: PropTypes.func.isRequired
+}

@@ -42,8 +42,8 @@ function BurgerConstructor(props: any) {
       >
         {props.construct.map(
           (item: AppProps, index: number) =>
-            index > 0 &&
-            index < props.construct.length - 1 && (
+            index > 1 &&
+            index < props.construct.length  && (
               <li
                 className={ConstructorStyles.constructor__listitem}
                 key={item._id + index}
