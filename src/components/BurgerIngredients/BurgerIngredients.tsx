@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext } from "react";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import IngredientsStyles from "./BurgerIngredients.module.css";
 import { burgerIngredientsPropTypes, AppProps } from "../../utils/types";
@@ -6,8 +6,10 @@ import PropTypes from "prop-types";
 import BurgerIngredient from "../BurgerIngredient/BurgerIngredient";
 import Modal from "../Modal/Modal";
 import IngredientDetails from "../IngredientDetails/IngredientDetails";
-function BurgerIngredients(props: any) {
+import { Context } from '../../services/appContext';
+function BurgerIngredients() {
   const [current, setCurrent] = React.useState("bun");
+  const {state, dispatcher} = useContext(Context)
   const bunRef = useRef(null);
   const sauceRef = useRef(null);
   const mainRef = useRef(null);
@@ -56,7 +58,7 @@ function BurgerIngredients(props: any) {
         <section id={"bun"} ref={bunRef}>
           <h2 className={"text text_type_main-medium"}>Булки</h2>
           <ul className={IngredientsStyles.ingredients__list}>
-            {props.ingredients.map(
+            {state.ingredients.map(
               (item: AppProps) =>
                 item.type === "bun" && (
                   <li
@@ -74,7 +76,7 @@ function BurgerIngredients(props: any) {
         <section id={"sauce"} ref={sauceRef}>
           <h2 className={"text text_type_main-medium"}>Соусы</h2>
           <ul className={IngredientsStyles.ingredients__list}>
-            {props.ingredients.map(
+            {state.ingredients.map(
               (item: AppProps) =>
                 item.type === "sauce" && (
                   <li
@@ -92,7 +94,7 @@ function BurgerIngredients(props: any) {
         <section id={"main"} ref={mainRef}>
           <h2 className={"text text_type_main-medium"}>Начинки</h2>
           <ul className={IngredientsStyles.ingredients__list}>
-            {props.ingredients.map(
+            {state.ingredients.map(
               (item: AppProps) =>
                 item.type === "main" && (
                   <li
@@ -118,7 +120,3 @@ function BurgerIngredients(props: any) {
 }
 
 export default BurgerIngredients;
-
-BurgerIngredients.propTypes = {
-  ingredients: PropTypes.arrayOf(burgerIngredientsPropTypes).isRequired,
-};

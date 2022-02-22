@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   ConstructorElement,
   DragIcon,
@@ -9,41 +9,72 @@ import { burgerIngredientsPropTypes, AppProps } from "../../utils/types";
 import PropTypes from "prop-types";
 import Modal from "../Modal/Modal";
 import OrderDetails from "../OrderDetails/OrderDetails";
+import { Context } from '../../services/appContext';
 
-function BurgerConstructor(props: any) {
+function BurgerConstructor() {
+  const { state, dispatcher } = useContext(Context)
   const [isOpened, setIsOpened] = useState(false);
+  const [orderNumber, setOrderNumber] = useState(0)
+  const [orderName, setOrderName] = useState('')
 
   function toggleModal() {
     setIsOpened(!isOpened);
   }
-  const totalSum = props.construct.reduce(
-    (acc: any, item: AppProps) => acc + item.price,
-    0
-  );
-  return props.construct.length && (
+
+
+  const submitNewOrder = async () => {
+    try {
+      const res = await fetch('https://norma.nomoreparties.space/api/orders', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ ingredients: state.ingredients.map(i => i._id) })
+      })
+      if (!res.ok) {
+        throw new Error(`Error. Status: ${res.status}`)
+      }
+      const orderData = await res.json()
+      setOrderNumber(orderData.order.number)
+      setOrderName(orderData.name)
+      toggleModal()
+    } catch(err) {
+      setOrderNumber(0)
+      setOrderName('')
+      console.log(err.message)
+    }
+  }
+
+  useEffect(() => {
+    dispatcher({type:'totalSum'})
+  }, [state.ingredients])
+
+
+  return state.ingredients.length && (
     <section className={`${ConstructorStyles.constructor} mt-25`}>
       {isOpened && (
         <Modal onClose={toggleModal}>
-          <OrderDetails />
+          <OrderDetails number={orderNumber} name={orderName}/>
         </Modal>
       )}
 
       <div className={ConstructorStyles.constructor__topitem}>
+      {state.ingredients[0] &&
         <ConstructorElement
           type="top"
           isLocked={true}
-          text={props.construct[0].name + ' (верх)'}
-          price={props.construct[0].price}
-          thumbnail={props.construct[0].image}
+          text={state.ingredients[0].name + ' (верх)'}
+          price={state.ingredients[0].price}
+          thumbnail={state.ingredients[0].image}
         />
+      }
       </div>
+       { state.ingredients.length > 0 &&
       <ul
         className={`${ConstructorStyles.constructor__list} custom-scroll mt-4 mb-4`}
       >
-        {props.construct.map(
+
+        { state.ingredients.map(
           (item: AppProps, index: number) =>
-            index > 1 &&
-            index < props.construct.length  && (
+            item.type !== 'bun'  && (
               <li
                 className={ConstructorStyles.constructor__listitem}
                 key={item._id + index}
@@ -58,18 +89,22 @@ function BurgerConstructor(props: any) {
             )
         )}
       </ul>
+}
       <div className={ConstructorStyles.constructor__bottomitem}>
+        {state.ingredients[0] &&
         <ConstructorElement
           type="bottom"
           isLocked={true}
-          text={props.construct[0].name + ' (низ)'}
-          price={props.construct[0].price}
-          thumbnail={props.construct[0].image}
+          text={state.ingredients[0].name + ' (низ)'}
+          price={state.ingredients[0].price}
+          thumbnail={state.ingredients[0].image}
         />
+        }
       </div>
+      { state.ingredients.length > 0 &&
       <section className={`${ConstructorStyles.constructor__totalsum} mt-10`}>
         <div className={ConstructorStyles.constructor__wrap}>
-          <span className="text text_type_digits-medium">{totalSum}</span>
+          <span className="text text_type_digits-medium">{state.totalSum}</span>
           <span>
             <svg
               width="34"
@@ -101,17 +136,13 @@ function BurgerConstructor(props: any) {
             </svg>
           </span>
         </div>
-        <Button type="primary" size="medium" onClick={toggleModal}>
+        <Button type="primary" size="medium" onClick={submitNewOrder}>
           <span className="text text_type_main-default">Оформить заказ</span>
         </Button>
       </section>
-
+}
     </section>
   );
 }
 
 export default BurgerConstructor;
-
-BurgerConstructor.propTypes = {
-  construct: PropTypes.arrayOf(burgerIngredientsPropTypes).isRequired,
-};
