@@ -3,7 +3,7 @@ import AppHeader from "../AppHeader/AppHeader";
 import AppStyles from "./App.module.css";
 import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
 import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
-import { Context } from '../../services/appContext'
+import { AppContext } from '../../services/appContext'
 
 const initialState = {
   ingredients: [],
@@ -60,10 +60,10 @@ const [state, dispatcher] = useReducer(reducer, initialState);
     <>
       <AppHeader />
       <main className={`${AppStyles.main}`}>
-      <Context.Provider value={{ state, dispatcher }}>
+      <AppContext.Provider value={{ state, dispatcher }}>
         <BurgerIngredients />
         <BurgerConstructor />
-        </Context.Provider>
+        </AppContext.Provider>
       </main>
     </>
   );

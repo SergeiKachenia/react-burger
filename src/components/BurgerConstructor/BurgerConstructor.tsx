@@ -8,10 +8,10 @@ import ConstructorStyles from "./BurgerConstructor.module.css";
 import { AppPropsItem } from "../../utils/types";
 import Modal from "../Modal/Modal";
 import OrderDetails from "../OrderDetails/OrderDetails";
-import { Context } from '../../services/appContext';
+import { AppContext } from '../../services/appContext';
 
 function BurgerConstructor() {
-  const { state, dispatcher } = useContext(Context)
+  const { state, dispatcher } = useContext(AppContext)
   const [isOpened, setIsOpened] = useState(false);
   const [orderNumber, setOrderNumber] = useState(0)
   const [orderName, setOrderName] = useState('')

@@ -5,11 +5,11 @@ import { AppPropsItem } from "../../utils/types";
 import BurgerIngredient from "../BurgerIngredient/BurgerIngredient";
 import Modal from "../Modal/Modal";
 import IngredientDetails from "../IngredientDetails/IngredientDetails";
-import { Context } from '../../services/appContext';
+import { AppContext } from '../../services/appContext';
 
 function BurgerIngredients() {
   const [current, setCurrent] = React.useState("bun");
-  const {state, dispatcher} = useContext(Context)
+  const {state, dispatcher} = useContext(AppContext)
   const bunRef = useRef(null);
   const sauceRef = useRef(null);
   const mainRef = useRef(null);
