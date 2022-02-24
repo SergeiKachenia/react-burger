@@ -1,8 +1,9 @@
 import React from "react";
 import ODStyles from "./OrderDetails.module.css";
 import iconDone from "../../images/done.png";
+import { orderDetails } from "../../utils/types";
 
-function OrderDetails(props) {
+function OrderDetails(props: orderDetails) {
   return (
     <>
       <div className={`text text_type_digits-large`}>{props.number}</div>

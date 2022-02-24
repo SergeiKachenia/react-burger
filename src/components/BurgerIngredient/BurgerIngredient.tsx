@@ -2,8 +2,9 @@ import React from "react";
 import IngredientStyles from "./BurgerIngredient.module.css";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from "prop-types";
+import { AppProps } from "../../utils/types";
 
-function BurgerIngredient(props: any) {
+function BurgerIngredient(props: AppProps) {
   return (
     <a className={IngredientStyles.ingredient__link} href="#">
       <img src={props.item.image} alt={props.item.name} />

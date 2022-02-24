@@ -1,8 +1,8 @@
 import React from "react";
 import IDStyles from "./IngredientDetails.module.css";
 import PropTypes from "prop-types";
-
-function IngredientDetails(props: any) {
+import { AppProps } from "../../utils/types";
+function IngredientDetails(props: AppProps) {
   return (
     <>
       <img

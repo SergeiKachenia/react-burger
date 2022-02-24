@@ -5,8 +5,7 @@ import {
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import ConstructorStyles from "./BurgerConstructor.module.css";
-import { burgerIngredientsPropTypes, AppProps } from "../../utils/types";
-import PropTypes from "prop-types";
+import { AppPropsItem } from "../../utils/types";
 import Modal from "../Modal/Modal";
 import OrderDetails from "../OrderDetails/OrderDetails";
 import { Context } from '../../services/appContext';
@@ -16,6 +15,8 @@ function BurgerConstructor() {
   const [isOpened, setIsOpened] = useState(false);
   const [orderNumber, setOrderNumber] = useState(0)
   const [orderName, setOrderName] = useState('')
+
+  const bun = state.ingredients.length > 0 ? state.ingredients.find(i => i.type === 'bun') : []
 
   function toggleModal() {
     setIsOpened(!isOpened);
@@ -57,23 +58,23 @@ function BurgerConstructor() {
       )}
 
       <div className={ConstructorStyles.constructor__topitem}>
-      {state.ingredients[0] &&
+      {bun &&
         <ConstructorElement
           type="top"
           isLocked={true}
-          text={state.ingredients[0].name + ' (верх)'}
-          price={state.ingredients[0].price}
-          thumbnail={state.ingredients[0].image}
+          text={bun.name + ' (верх)'}
+          price={bun.price}
+          thumbnail={bun.image}
         />
       }
       </div>
-       { state.ingredients.length > 0 &&
+       {
       <ul
         className={`${ConstructorStyles.constructor__list} custom-scroll mt-4 mb-4`}
       >
 
         { state.ingredients.map(
-          (item: AppProps, index: number) =>
+          (item: AppPropsItem, index: number) =>
             item.type !== 'bun'  && (
               <li
                 className={ConstructorStyles.constructor__listitem}
@@ -91,17 +92,17 @@ function BurgerConstructor() {
       </ul>
 }
       <div className={ConstructorStyles.constructor__bottomitem}>
-        {state.ingredients[0] &&
+        {bun &&
         <ConstructorElement
           type="bottom"
           isLocked={true}
-          text={state.ingredients[0].name + ' (низ)'}
-          price={state.ingredients[0].price}
-          thumbnail={state.ingredients[0].image}
+          text={bun.name + ' (низ)'}
+          price={bun.price}
+          thumbnail={bun.image}
         />
         }
       </div>
-      { state.ingredients.length > 0 &&
+      {
       <section className={`${ConstructorStyles.constructor__totalsum} mt-10`}>
         <div className={ConstructorStyles.constructor__wrap}>
           <span className="text text_type_digits-medium">{state.totalSum}</span>
