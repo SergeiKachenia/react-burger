@@ -14,7 +14,10 @@ function BurgerIngredients() {
   const sauceRef = useRef(null);
   const mainRef = useRef(null);
 
-  const filterIngredients = (ingredientName) => state.ingredients.filter(i => i.type === ingredientName)
+
+  const ingredientsBun = state.ingredients.filter(i => i.type === 'bun');
+  const ingredientsSauce = state.ingredients.filter(i => i.type === 'sauce');
+  const ingredientsMain = state.ingredients.filter(i => i.type === 'main');
 
   const clickTab = (e: any, ref: any) => {
     setCurrent(e);
@@ -60,9 +63,9 @@ function BurgerIngredients() {
         <section id={"bun"} ref={bunRef}>
           <h2 className={"text text_type_main-medium"}>Булки</h2>
           <ul className={IngredientsStyles.ingredients__list}>
-            {state.ingredients.map(
+            {ingredientsBun.map(
               (item: AppPropsItem) =>
-                filterIngredients('bun') && (
+                (
                   <li
                     key={item._id}
                     onClick={() => {
@@ -78,9 +81,9 @@ function BurgerIngredients() {
         <section id={"sauce"} ref={sauceRef}>
           <h2 className={"text text_type_main-medium"}>Соусы</h2>
           <ul className={IngredientsStyles.ingredients__list}>
-            {state.ingredients.map(
+            {ingredientsSauce.map(
               (item: AppPropsItem) =>
-              filterIngredients('sauce') && (
+              (
                   <li
                     key={item._id}
                     onClick={() => {
@@ -96,9 +99,9 @@ function BurgerIngredients() {
         <section id={"main"} ref={mainRef}>
           <h2 className={"text text_type_main-medium"}>Начинки</h2>
           <ul className={IngredientsStyles.ingredients__list}>
-            {state.ingredients.map(
+            {ingredientsMain.map(
               (item: AppPropsItem) =>
-              filterIngredients('main')&& (
+               (
                   <li
                     key={item._id}
                     onClick={() => {
