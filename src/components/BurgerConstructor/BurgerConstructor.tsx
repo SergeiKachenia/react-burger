@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   ConstructorElement,
   DragIcon,
@@ -8,55 +8,97 @@ import ConstructorStyles from "./BurgerConstructor.module.css";
 import { AppPropsItem } from "../../utils/types";
 import Modal from "../Modal/Modal";
 import OrderDetails from "../OrderDetails/OrderDetails";
-import { AppContext } from '../../services/appContext';
+import { useSelector, useDispatch } from 'react-redux'
+import { useDrop, useDrag } from 'react-dnd'
+import { nanoid } from 'nanoid'
+import { ingredientsSelector, addIngredientToCart, deleteIngredientFromCart, closeOrderModal, sendOrderInfo, getTotalSum, dragIngredients } from '../../services/slice/ingredients'
 
 function BurgerConstructor() {
-  const { state, dispatcher } = useContext(AppContext)
-  const [isOpened, setIsOpened] = useState(false);
-  const [orderNumber, setOrderNumber] = useState(0)
-  const [orderName, setOrderName] = useState('')
 
-  const bun = state.ingredients.length > 0 ? state.ingredients.find(i => i.type === 'bun') : []
+  const dispatch = useDispatch()
+  const { totalSum, cartIngredients, orderModal } = useSelector(ingredientsSelector)
 
-  function toggleModal() {
-    setIsOpened(!isOpened);
-  }
+  const bun = cartIngredients.find(item => item.type === 'bun')
+  const other = cartIngredients.filter(item => item.type !== 'bun')
+  const item = other.item;
+  const index = other.index;
 
-
-  const submitNewOrder = async () => {
-    try {
-      const res = await fetch('https://norma.nomoreparties.space/api/orders', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ ingredients: state.ingredients.map(i => i._id) })
-      })
-      if (!res.ok) {
-        throw new Error(`Error. Status: ${res.status}`)
-      }
-      const orderData = await res.json()
-      setOrderNumber(orderData.order.number)
-      setOrderName(orderData.name)
-      toggleModal()
-    } catch(err) {
-      setOrderNumber(0)
-      setOrderName('')
-      console.log(err.message)
-    }
-  }
+  const [{isHover}, dropTarget] = useDrop({
+    accept: 'ingredient',
+    drop: (item:{type: string, _id: string}) => {
+      if (item.type === 'bun') {
+        dispatch(deleteIngredientFromCart(item))
+        dispatch(addIngredientToCart(item))
+      } else { dispatch(addIngredientToCart(item)) }
+    },
+    collect: monitor => ({
+      isHover: monitor.isOver()
+    })
+  })
 
   useEffect(() => {
-    dispatcher({type:'totalSum'})
-  }, [state.ingredients])
+    dispatch(getTotalSum())
+  }, [cartIngredients])
 
+  const ref = useRef(null);
+  const id = other._id;
 
-  return state.ingredients.length && (
-    <section className={`${ConstructorStyles.constructor} mt-25`}>
-      {isOpened && (
-        <Modal onClose={toggleModal}>
-          <OrderDetails number={orderNumber} name={orderName}/>
+  type itemHanlder = {
+    index: number,
+    handlerId: number,
+    id: number
+  }
+  const [{ isDragging }, drag] = useDrag({
+    type: 'cartIngredient',
+    item: () => ({ item, index }),
+    collect: monitor => ({ isDragging: monitor.isDragging() })
+  })
+
+  const [{ handlerId }, drop] = useDrop({
+    accept: 'cartIngredient',
+    collect: monitor => ({ handlerId: monitor.getHandlerId() }),
+    drop: item => {
+      // @ts-ignore
+      const dragIndex = item.index;
+      const hoverIndex = index;
+      if (dragIndex==hoverIndex) return;
+      dispatch(dragIngredients({drag: dragIndex, hover: hoverIndex }))
+    },
+    hover: (item, monitor) => {
+      if (!ref.current) return
+      // @ts-ignore
+      const dragIndex = item.index
+      const hoverIndex = index
+
+      if (dragIndex === hoverIndex) return
+
+      const hoverBoundingRect = ref.current?.getBoundingClientRect()
+      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
+      const clientOffset = monitor.getClientOffset()
+      const hoverClientY = clientOffset.y - hoverBoundingRect.top
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) return
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) return
+
+      dispatch(dragIngredients({ drag: dragIndex, hover: hoverIndex }))
+      // @ts-ignore
+      item.index = hoverIndex
+    }
+  })
+
+  drag(drop(ref))
+
+const border = isHover ? '#4C4CFF 2px solid' : 'none';
+const opacity = isDragging ? 0.2 : 1;
+
+  return  (
+    <section className={`${ConstructorStyles.constructor} mt-25`} ref={dropTarget} style={{border}}>
+      {orderModal && (
+        <Modal onClose={()=>{dispatch(closeOrderModal())}}>
+          <OrderDetails />
         </Modal>
       )}
-
+{ (cartIngredients.length === 0) &&
+        <span className='text text_type_main-medium'> Перетащите сюда ингредиенты </span> }
       <div className={ConstructorStyles.constructor__topitem}>
       {bun &&
         <ConstructorElement
@@ -73,18 +115,23 @@ function BurgerConstructor() {
         className={`${ConstructorStyles.constructor__list} custom-scroll mt-4 mb-4`}
       >
 
-        { state.ingredients.map(
+        { other.length !== 0 && other.map(
           (item: AppPropsItem, index: number) =>
-            item.type !== 'bun'  && (
+          (
               <li
                 className={ConstructorStyles.constructor__listitem}
-                key={item._id + index}
+                key={nanoid()}
+                style = {{opacity}}
+                data-handler-id={handlerId}
+                ref={ref}
+                draggable
               >
                 <DragIcon type="primary" />
                 <ConstructorElement
                   text={item.name}
                   price={item.price}
                   thumbnail={item.image}
+                  handleClose={() =>  dispatch(deleteIngredientFromCart(item))}
                 />
               </li>
             )
@@ -105,7 +152,7 @@ function BurgerConstructor() {
       {
       <section className={`${ConstructorStyles.constructor__totalsum} mt-10`}>
         <div className={ConstructorStyles.constructor__wrap}>
-          <span className="text text_type_digits-medium">{state.totalSum}</span>
+          <span className="text text_type_digits-medium">{totalSum}</span>
           <span>
             <svg
               width="34"
@@ -137,7 +184,7 @@ function BurgerConstructor() {
             </svg>
           </span>
         </div>
-        <Button type="primary" size="medium" onClick={submitNewOrder}>
+        <Button type="primary" size="medium" onClick={()=>{dispatch(sendOrderInfo(cartIngredients))}}>
           <span className="text text_type_main-default">Оформить заказ</span>
         </Button>
       </section>

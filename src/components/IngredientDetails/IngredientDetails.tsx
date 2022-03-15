@@ -2,6 +2,7 @@ import React from "react";
 import IDStyles from "./IngredientDetails.module.css";
 import PropTypes from "prop-types";
 import { AppProps } from "../../utils/types";
+
 function IngredientDetails(props: AppProps) {
   return (
     <>

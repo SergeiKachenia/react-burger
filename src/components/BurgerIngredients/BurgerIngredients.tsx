@@ -1,34 +1,49 @@
-import React, { useRef, useState, useContext } from "react";
+import React, { useRef, useState } from "react";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import IngredientsStyles from "./BurgerIngredients.module.css";
 import { AppPropsItem } from "../../utils/types";
 import BurgerIngredient from "../BurgerIngredient/BurgerIngredient";
 import Modal from "../Modal/Modal";
 import IngredientDetails from "../IngredientDetails/IngredientDetails";
-import { AppContext } from '../../services/appContext';
+import { ingredientsSelector, removeIngredientDetails } from '../../services/slice/ingredients'
+import { useSelector, useDispatch} from 'react-redux'
 
 function BurgerIngredients() {
+  const dispatch = useDispatch()
+  const { ingredients, activeIngredientDetailsModal, ingredientDetails } = useSelector(ingredientsSelector)
   const [current, setCurrent] = React.useState("bun");
-  const {state, dispatcher} = useContext(AppContext)
   const bunRef = useRef(null);
   const sauceRef = useRef(null);
   const mainRef = useRef(null);
+  const scrollRef = useRef(null);
 
-
-  const ingredientsBun = state.ingredients.filter(i => i.type === 'bun');
-  const ingredientsSauce = state.ingredients.filter(i => i.type === 'sauce');
-  const ingredientsMain = state.ingredients.filter(i => i.type === 'main');
+  const ingredientsBun = ingredients.filter(i => i.type === 'bun');
+  const ingredientsSauce = ingredients.filter(i => i.type === 'sauce');
+  const ingredientsMain = ingredients.filter(i => i.type === 'main');
 
   const clickTab = (e: any, ref: any) => {
     setCurrent(e);
     ref.current.scrollIntoView({ behavior: "smooth" });
   };
-  const [isOpened, setIsOpened] = useState(null);
 
-  function toggleModal(item: any) {
-    setIsOpened(item);
-  }
-  return state.ingredients.length && (
+  const handleScroll = () => {
+    const scrollPosition = scrollRef.current.getBoundingClientRect().top
+
+    const bunTitle = Math.abs(scrollPosition - bunRef.current.getBoundingClientRect().top)
+    const sauceTitle = Math.abs(scrollPosition - sauceRef.current.getBoundingClientRect().top)
+    const mainTitle = Math.abs(scrollPosition - mainRef.current.getBoundingClientRect().top)
+
+    const min = Math.min(bunTitle, sauceTitle, mainTitle);
+    if (min === sauceTitle){
+      setCurrent('sauce')
+    }
+    else if(min === mainTitle) {
+      setCurrent('main')
+    }
+    else setCurrent('bun')
+    }
+
+  return ingredients && (
     <section className={IngredientsStyles.ingredients}>
       <h1 className={"text text_type_main-large mb-5 mt-10"}>
         Соберите бургер
@@ -58,7 +73,7 @@ function BurgerIngredients() {
       </div>
 
       <div
-        className={`${IngredientsStyles.ingredients__scroll} custom-scroll mt-10`}
+        className={`${IngredientsStyles.ingredients__scroll} custom-scroll mt-10`} ref={scrollRef} onScroll={handleScroll}
       >
         <section id={"bun"} ref={bunRef}>
           <h2 className={"text text_type_main-medium"}>Булки</h2>
@@ -68,11 +83,8 @@ function BurgerIngredients() {
                 (
                   <li
                     key={item._id}
-                    onClick={() => {
-                      toggleModal(item);
-                    }}
                   >
-                    <BurgerIngredient item={item} handler={toggleModal} />
+                    <BurgerIngredient item={item}/>
                   </li>
                 )
             )}
@@ -86,11 +98,8 @@ function BurgerIngredients() {
               (
                   <li
                     key={item._id}
-                    onClick={() => {
-                      toggleModal(item);
-                    }}
                   >
-                    <BurgerIngredient item={item} handler={toggleModal} />
+                    <BurgerIngredient item={item} />
                   </li>
                 )
             )}
@@ -104,20 +113,17 @@ function BurgerIngredients() {
                (
                   <li
                     key={item._id}
-                    onClick={() => {
-                      toggleModal(item);
-                    }}
                   >
-                    <BurgerIngredient item={item} handler={toggleModal} />
+                    <BurgerIngredient item={item} />
                   </li>
                 )
             )}
           </ul>
         </section>
       </div>
-      {isOpened && (
-        <Modal onClose={toggleModal} title={"Детали ингредиента"}>
-          <IngredientDetails item={isOpened} />
+      {activeIngredientDetailsModal && (
+        <Modal onClose={()=>{dispatch(removeIngredientDetails())}} title={"Детали ингредиента"}>
+          <IngredientDetails item={ingredientDetails} />
         </Modal>
       )}
     </section>
