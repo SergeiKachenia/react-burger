@@ -120,6 +120,7 @@ function BurgerIngredients() {
         {activeIngredientDetailsModal && (
           <Modal
             onClose={() => {
+              // @ts-ignore
               dispatch(removeIngredientDetails());
             }}
             title={"Детали ингредиента"}

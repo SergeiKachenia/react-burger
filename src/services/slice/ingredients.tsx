@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-
+import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { v4 as uuidv4 } from 'uuid';
 export const initialState = {
   ingredients: [],
   loading: false,
@@ -13,6 +13,7 @@ export const initialState = {
   totalSum: 0,
 };
 
+const baseUrl = 'https://norma.nomoreparties.space/api'
 const ingredientsSlice = createSlice({
   name: "ingredients",
   initialState,
@@ -37,8 +38,19 @@ const ingredientsSlice = createSlice({
       state.ingredientDetails = null;
       state.activeIngredientDetailsModal = false;
     },
-    addIngredientToCart: (state, { payload }) => {
-      state.cartIngredients = [...state.cartIngredients, payload];
+    addIngredientToCart: {
+      // @ts-ignore
+      reducer: (state, { payload }) => {
+        state.cartIngredients.push(payload)
+        console.log({payload})
+      },
+      // @ts-ignore
+      prepare: item => {
+        const id = uuidv4();
+        // @ts-ignore
+        return { payload: { id, ...item } }
+
+      },
     },
     deleteIngredientFromCart: (state, { payload }) => {
       if (payload.type === "bun")
@@ -53,6 +65,9 @@ const ingredientsSlice = createSlice({
           (i, ind) => ind !== itemIndex
         );
       }
+    },
+    removeIngredientFromCart: (state) => {
+    state.cartIngredients = [];
     },
     sendOrder: (state) => {
       state.loading = true;
@@ -90,13 +105,13 @@ const ingredientsSlice = createSlice({
       state.totalSum = total;
     },
     dragIngredients: (state, { payload }) => {
-      const ingredientsToChange = state.cartIngredients;
+      const ingredientsToChange = state.cartIngredients.filter(i => i.type !== 'bun')
       ingredientsToChange[payload.drag] = ingredientsToChange.splice(
         payload.hover,
         1,
         ingredientsToChange[payload.drag]
       )[0];
-      state.cartIngredients = ingredientsToChange;
+      state.cartIngredients = ingredientsToChange.concat(state.cartIngredients.filter(i => i.type === 'bun'))
     },
   },
 });
@@ -115,18 +130,24 @@ export const {
   closeOrderModal,
   getTotalSum,
   dragIngredients,
+  removeIngredientFromCart
 } = ingredientsSlice.actions;
+
+const checkResponse = (res) => {
+  if (!res.ok) {
+    throw new Error(`Error status - ${res.status}`);
+  }
+}
 
 export const fetchIngredients = () => {
   return async (dispatch) => {
+    // @ts-ignore
     dispatch(getIngredients());
     try {
       const res = await fetch(
-        "https://norma.nomoreparties.space/api/ingredients"
+        `${baseUrl}/ingredients`
       );
-      if (!res.ok) {
-        throw new Error(`Error status - ${res.status}`);
-      }
+      checkResponse(res);
       const actualData = await res.json();
       dispatch(getIngredientsSuccess(actualData.data));
     } catch (error) {
@@ -137,18 +158,19 @@ export const fetchIngredients = () => {
 
 export const sendOrderInfo = (ingredients) => {
   return async (dispatch) => {
+    // @ts-ignore
     dispatch(sendOrder());
     try {
-      const res = await fetch("https://norma.nomoreparties.space/api/orders", {
+      const res = await fetch(`${baseUrl}/orders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ingredients: ingredients.map((i) => i._id) }),
       });
-      if (!res.ok) {
-        throw new Error(`Error status - ${res.status}`);
-      }
+      checkResponse(res);
       const actualData = await res.json();
       dispatch(sendOrderSuccess(actualData));
+      // @ts-ignore
+      dispatch(removeIngredientFromCart())
     } catch (error) {
       dispatch(sendOrderFail(error.message));
     }

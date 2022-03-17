@@ -1,7 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect} from "react";
 import {
   ConstructorElement,
-  DragIcon,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import ConstructorStyles from "./BurgerConstructor.module.css";
@@ -9,8 +8,7 @@ import { AppPropsItem } from "../../utils/types";
 import Modal from "../Modal/Modal";
 import OrderDetails from "../OrderDetails/OrderDetails";
 import { useSelector, useDispatch } from "react-redux";
-import { useDrop, useDrag } from "react-dnd";
-import { nanoid } from "nanoid";
+import { useDrop } from "react-dnd";
 import {
   ingredientsSelector,
   addIngredientToCart,
@@ -20,7 +18,7 @@ import {
   getTotalSum,
   dragIngredients,
 } from "../../services/slice/ingredients";
-
+import ConstructorItem from "../ConstructorItem/ConstructorItem"
 function BurgerConstructor() {
   const dispatch = useDispatch();
   const { totalSum, cartIngredients, orderModal } =
@@ -28,8 +26,6 @@ function BurgerConstructor() {
 
   const bun = cartIngredients.find((item) => item.type === "bun");
   const other = cartIngredients.filter((item) => item.type !== "bun");
-  const item = other.item;
-  const index = other.index;
 
   const [{ isHover }, dropTarget] = useDrop({
     accept: "ingredient",
@@ -47,54 +43,12 @@ function BurgerConstructor() {
   });
 
   useEffect(() => {
+    // @ts-ignore
     dispatch(getTotalSum());
   }, [cartIngredients]);
 
-  const ref = useRef(null);
-  const id = other._id;
-
-  const [{ isDragging }, drag] = useDrag({
-    type: "cartIngredient",
-    item: () => ({ item, index }),
-    collect: (monitor) => ({ isDragging: monitor.isDragging() }),
-  });
-
-  const [{ handlerId }, drop] = useDrop({
-    accept: "cartIngredient",
-    collect: (monitor) => ({ handlerId: monitor.getHandlerId() }),
-    drop: (item) => {
-      // @ts-ignore
-      const dragIndex = item.index;
-      const hoverIndex = index;
-      if (dragIndex === hoverIndex) return;
-      dispatch(dragIngredients({ drag: dragIndex, hover: hoverIndex }));
-    },
-    hover: (item, monitor) => {
-      if (!ref.current) return;
-      // @ts-ignore
-      const dragIndex = item.index;
-      const hoverIndex = index;
-
-      if (dragIndex === hoverIndex) return;
-
-      const hoverBoundingRect = ref.current?.getBoundingClientRect();
-      const hoverMiddleY =
-        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-      const clientOffset = monitor.getClientOffset();
-      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) return;
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) return;
-
-      dispatch(dragIngredients({ drag: dragIndex, hover: hoverIndex }));
-      // @ts-ignore
-      item.index = hoverIndex;
-    },
-  });
-
-  drag(drop(ref));
 
   const border = isHover ? "#4C4CFF 3px solid" : "none";
-  const opacity = isDragging ? 0.2 : 1;
 
   return (
     <section
@@ -105,6 +59,7 @@ function BurgerConstructor() {
       {orderModal && (
         <Modal
           onClose={() => {
+            // @ts-ignore
             dispatch(closeOrderModal());
           }}
         >
@@ -133,23 +88,9 @@ function BurgerConstructor() {
           className={`${ConstructorStyles.constructor__list} custom-scroll mt-4 mb-4`}
         >
           {other.length !== 0 &&
-            other.map((item: AppPropsItem) => (
-              <li
-                className={ConstructorStyles.constructor__listitem}
-                key={nanoid()}
-                style={{ opacity }}
-                data-handler-id={handlerId}
-                ref={ref}
-                draggable
-              >
-                <DragIcon type="primary" />
-                <ConstructorElement
-                  text={item.name}
-                  price={item.price}
-                  thumbnail={item.image}
-                  handleClose={() => dispatch(deleteIngredientFromCart(item))}
-                />
-              </li>
+            other.map((item: AppPropsItem, index: number) => (
+            // @ts-ignore
+          <ConstructorItem item={item} index={index} key={item.id} />
             ))}
         </ul>
       }
@@ -165,6 +106,7 @@ function BurgerConstructor() {
         )}
       </div>
       {
+        cartIngredients.length >= 1 && (
         <section className={`${ConstructorStyles.constructor__totalsum} mt-10`}>
           <div className={ConstructorStyles.constructor__wrap}>
             <span className="text text_type_digits-medium">{totalSum}</span>
@@ -209,7 +151,8 @@ function BurgerConstructor() {
             <span className="text text_type_main-default">Оформить заказ</span>
           </Button>
         </section>
-      }
+        )
+          }
     </section>
   );
 }
