@@ -1,19 +1,11 @@
-import React from "react";
 import IDStyles from "./IngredientDetails.module.css";
 import PropTypes from "prop-types";
-import { AppProps } from "../../utils/types";
 
-function IngredientDetails(props: AppProps) {
+function IngredientDetails({ item }) {
   return (
     <>
-      <img
-        className={IDStyles.image}
-        src={props.item.image}
-        alt={props.item.name}
-      />
-      <p className={"text text_type_main-medium mt-4 mb-8"}>
-        {props.item.name}
-      </p>
+      <img className={IDStyles.image} src={item.image} alt={item.name} />
+      <p className={"text text_type_main-medium mt-4 mb-8"}>{item.name}</p>
       <div>
         <ul className={IDStyles.list}>
           <li
@@ -21,7 +13,7 @@ function IngredientDetails(props: AppProps) {
           >
             Калории,ккал
             <span className="text text_type_digits-default">
-              {props.item.calories}
+              {item.calories}
             </span>
           </li>
           <li
@@ -29,23 +21,21 @@ function IngredientDetails(props: AppProps) {
           >
             Белки, г
             <span className="text text_type_digits-default">
-              {props.item.proteins}
+              {item.proteins}
             </span>
           </li>
           <li
             className={`${IDStyles.list__item} text text_type_main-default text_color_inactive`}
           >
             Жиры, г
-            <span className="text text_type_digits-default">
-              {props.item.fat}
-            </span>
+            <span className="text text_type_digits-default">{item.fat}</span>
           </li>
           <li
             className={`${IDStyles.list__item} text text_type_main-default text_color_inactive`}
           >
             Углеводы, г
             <span className="text text_type_digits-default">
-              {props.item.carbohydrates}
+              {item.carbohydrates}
             </span>
           </li>
         </ul>
