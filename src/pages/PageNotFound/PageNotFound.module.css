@@ -1,0 +1,21 @@
+.pageNotFound__main {
+    max-width: 480px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 180px auto 0;
+    padding: 0;
+    background: #131316;
+    text-align: center;
+}
+
+.pageNotFound__link {
+    margin-top: 100px;
+    color: #4C4CFF;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    text-decoration: none;
+}

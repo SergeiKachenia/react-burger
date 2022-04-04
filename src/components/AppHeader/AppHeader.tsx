@@ -6,6 +6,7 @@ import {
   ProfileIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import AppHeaderStyles from "./AppHeader.module.css";
+import { NavLink, Link } from 'react-router-dom'
 
 function AppHeader() {
   return (
@@ -14,40 +15,40 @@ function AppHeader() {
         <nav className={AppHeaderStyles.header__nav}>
           <ul className={AppHeaderStyles.list}>
             <li className={AppHeaderStyles.list__item}>
-              <a className={AppHeaderStyles.list__link} href={"#"}>
+              <NavLink to={"/"} className={AppHeaderStyles.list__link} href={"#"}>
                 <BurgerIcon type="primary" />
                 <span
                   className={`${AppHeaderStyles.list__title} ml-2 text text_type_main-default`}
                 >
                   Конструктор
                 </span>
-              </a>
+              </NavLink>
             </li>
             <li className={AppHeaderStyles.list__item}>
-              <a className={AppHeaderStyles.list__link} href={"#"}>
+              <NavLink to={"/feed"} className={AppHeaderStyles.list__link} href={"#"}>
                 <ListIcon type="secondary" />
                 <span
                   className={`${AppHeaderStyles.list__title} ml-2 text text_type_main-default text_color_inactive`}
                 >
                   Лента заказов
                 </span>
-              </a>
+              </NavLink>
             </li>
           </ul>
         </nav>
-        <a className={AppHeaderStyles.logo} href={"#"}>
-          {" "}
-          <Logo />{" "}
-        </a>
+        <Link to={"/"} className={AppHeaderStyles.logo} href={"#"}>
+
+          <Logo />
+        </Link>
         <div className={AppHeaderStyles.account}>
-          <a className={AppHeaderStyles.account__link} href={"#"}>
+          <NavLink to={"/profile"} className={AppHeaderStyles.account__link} href={"#"}>
             <ProfileIcon type="secondary" />
             <span
               className={`${AppHeaderStyles.account__title} ml-2 text text_type_main-default text_color_inactive`}
             >
               Личный кабинет
             </span>
-          </a>
+          </NavLink>
         </div>
       </div>
     </header>
