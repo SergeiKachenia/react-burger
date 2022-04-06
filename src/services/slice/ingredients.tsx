@@ -1,5 +1,6 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from 'uuid';
+import {baseUrl, checkResponse} from '../../utils/utils'
 export const initialState = {
   ingredients: [],
   loading: false,
@@ -13,7 +14,7 @@ export const initialState = {
   totalSum: 0,
 };
 
-const baseUrl = 'https://norma.nomoreparties.space/api'
+
 const ingredientsSlice = createSlice({
   name: "ingredients",
   initialState,
@@ -133,11 +134,6 @@ export const {
   removeIngredientFromCart
 } = ingredientsSlice.actions;
 
-const checkResponse = (res) => {
-  if (!res.ok) {
-    throw new Error(`Error status - ${res.status}`);
-  }
-}
 
 export const fetchIngredients = () => {
   return async (dispatch) => {

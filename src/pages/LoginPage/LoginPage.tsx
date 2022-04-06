@@ -3,14 +3,20 @@ import { useState, useEffect } from 'react'
 import LPStyles from './LoginPage.module.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components'
+import { authSelector, resetError, loginRequest, resetForgotPassReqSuccess, resetResetPassReqSuccess } from '../../services/slice/authorisation'
+
 
 export const LoginPage = () => {
+
   const [formData, addFormData] = useState({
     email: '',
     password: ''
   });
+
+  const { error, auth } = useSelector(authSelector)
   const location = useLocation()
   const dispatch = useDispatch()
+
   const changeFormData = e => {
     addFormData({
       ...formData,
@@ -18,14 +24,34 @@ export const LoginPage = () => {
     })
   }
 
+  useEffect(() => {
+    dispatch(resetError())
+    dispatch(resetResetPassReqSuccess())
+    dispatch(resetForgotPassReqSuccess())
+  }, [])
+
+  const sendLoginForm = e => {
+    e.preventDefault()
+    // @ts-ignore
+    dispatch(loginRequest(formData))
+  }
+
+  if (auth) {
+    return (
+          // @ts-ignore
+      <Redirect to={location?.state?.from || '/' } />
+    )
+  }
+
+
   return (
     <main className = {LPStyles.loginPage__main}>
       <div className = {LPStyles.loginPage__content}>
 <h1 className={`${LPStyles.loginPage__title} mb-6 text_type_main-medium`}> Вход </h1>
-<form className={`${LPStyles.loginPage__form} mb-20`}>
+<form className={`${LPStyles.loginPage__form} mb-20`} onSubmit={sendLoginForm}>
 <Input
             type={'email'}
-            placeholder={'E-mail'}
+            placeholder={'Ваш e-mail'}
             onChange={changeFormData}
             value={formData.email}
             name={'email'}
@@ -36,6 +62,7 @@ export const LoginPage = () => {
             onChange={changeFormData}
             value={formData.password}
             name={'password'} />
+            { error && <span className={`${LPStyles.error} text text_type_main-medium mb-4`}>{error}</span> }
             <Button type='primary' size='medium'>Войти</Button>
 </form>
 <div className={`${LPStyles.loginPage__buttons} mb-4 text_type_main-medium`}>

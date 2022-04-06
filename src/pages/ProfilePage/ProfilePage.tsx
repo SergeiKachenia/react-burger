@@ -1,11 +1,11 @@
-import { Redirect, Link, useLocation } from 'react-router-dom'
+import { Redirect, NavLink, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { NavLink } from 'react-router-dom'
 import PPStyles from './ProfilePage.module.css'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components'
-
+import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components'
+import { resetError, logoutRequest, authSelector, getUserRequest, updateUserRequest } from '../../services/slice/authorisation'
 export const ProfilePage = () => {
+  const { error, userData } = useSelector(authSelector)
   const [formData, addFormData] = useState({
     email: '',
     password: '',
@@ -19,28 +19,62 @@ export const ProfilePage = () => {
       [e.target.name]: e.target.value
     })
   }
+  const logout = () => {
+    dispatch(logoutRequest())
+  }
+
+  const resetUserInfo = e => {
+    e.preventDefault()
+    addFormData({
+      name: userData.name,
+      email: userData.email,
+      password: userData.password
+    })
+  }
+
+  const updateUserInfo = e => {
+    e.preventDefault()
+    // @ts-ignore
+    dispatch(updateUserRequest(formData))
+  }
+
+  useEffect(() => {
+    dispatch(getUserRequest())
+    addFormData({
+      name: userData.name,
+      email: userData.email,
+      password: userData.password
+    })
+  }, [userData])
+
+
+  useEffect(() => {
+    dispatch(resetError())
+  }, [])
+
+
   return (
     <main className={PPStyles.profilePage__main}>
       <section className={PPStyles.profilePage__navMenu}>
       <NavLink
-      to='/profile' exact
+      to='/profile' exact={true}
       className={`${PPStyles.profilePage__link} text text_type_main-medium text_color_inactive`}
       activeStyle={{ color: '#F2F2F3' }}>
         Профиль
       </NavLink>
       <NavLink
-      to='/profile/orders' exact
+      to='/profile/orders' exact={true}
       className={`${PPStyles.profilePage__link} text text_type_main-medium text_color_inactive`}
       activeStyle={{ color: '#F2F2F3' }}>
         История заказов
       </NavLink>
       <NavLink
-      to='/login' exact
+      to='/login' exact={true}
       className={`${PPStyles.profilePage__link} text text_type_main-medium text_color_inactive`}
-      activeStyle={{ color: '#F2F2F3' }}>
+      activeStyle={{ color: '#F2F2F3' }} onClick={logout}>
         Выход
       </NavLink>
-      <span className={`${PPStyles.profilePage__text} text text_type_main-default text_color_inactive mt-20`}>
+      <span className={`${PPStyles.profilePage__text} text text_type_main-default text_color_inactive mt-20`} >
       В этом разделе вы можете
       изменить свои персональные данные</span>
       </section>
@@ -82,9 +116,10 @@ export const ProfilePage = () => {
           errorText={'Ошибка'}
           size={'default'}
         />
+        { error && <span className={`${PPStyles.error} text text_type_main-medium mb-4`}>{error}</span> }
         <div className={PPStyles.profilePage__buttons}>
-        <Button type={"primary"} size={"medium"}>Сохранить</Button>
-        <Button type={"secondary"} size={"medium"}>Отмена</Button>
+        <Button type={"primary"} size={"medium"} onClick={updateUserInfo}>Сохранить</Button>
+        <Button type={"secondary"} size={"medium"} onClick={resetUserInfo}>Отмена</Button>
       </div>
       </form>
       </section>
