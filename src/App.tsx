@@ -13,11 +13,23 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchIngredients,
-  ingredientsSelector,
 } from "./services/slice/ingredients";
+import { getUserRequest, authSelector, getTokenRequest} from './services/slice/authorisation'
+import { getCookie } from './utils/cookies'
+
 function App() {
+
+
+  const { auth } = useSelector(authSelector)
   useEffect(() => {
     dispatch(fetchIngredients());
+    if (getCookie('refreshToken')) {
+      dispatch(getUserRequest())
+      if (!auth) {
+        dispatch(getTokenRequest())
+        dispatch(getUserRequest())
+      }
+    }
   }, []);
 
   const dispatch = useDispatch();

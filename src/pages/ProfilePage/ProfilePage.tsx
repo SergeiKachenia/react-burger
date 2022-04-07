@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components'
 import { resetError, logoutRequest, authSelector, getUserRequest, updateUserRequest } from '../../services/slice/authorisation'
 export const ProfilePage = () => {
-  const { error, userData } = useSelector(authSelector)
+  const { error, userData, auth } = useSelector(authSelector)
   const [formData, addFormData] = useState({
     email: '',
     password: '',
@@ -20,8 +20,9 @@ export const ProfilePage = () => {
     })
   }
   const logout = () => {
-    dispatch(logoutRequest())
-  }
+    dispatch(logoutRequest());
+
+    }
 
   const resetUserInfo = e => {
     e.preventDefault()
@@ -53,24 +54,31 @@ export const ProfilePage = () => {
   }, [])
 
 
+  if (!auth) {
+    return (
+          // @ts-ignore
+      <Redirect to={location?.state?.from || '/login' } />
+    )
+  }
+
   return (
     <main className={PPStyles.profilePage__main}>
       <section className={PPStyles.profilePage__navMenu}>
       <NavLink
       to='/profile' exact={true}
-      className={`${PPStyles.profilePage__link} text text_type_main-medium text_color_inactive`}
+      className={`${PPStyles.profilePage__link} text text_type_main-medium`}
       activeStyle={{ color: '#F2F2F3' }}>
         Профиль
       </NavLink>
       <NavLink
       to='/profile/orders' exact={true}
-      className={`${PPStyles.profilePage__link} text text_type_main-medium text_color_inactive`}
+      className={`${PPStyles.profilePage__link} text text_type_main-medium`}
       activeStyle={{ color: '#F2F2F3' }}>
         История заказов
       </NavLink>
       <NavLink
-      to='/login' exact={true}
-      className={`${PPStyles.profilePage__link} text text_type_main-medium text_color_inactive`}
+      to= {auth? '/profile': '/login'} exact={true}
+      className={`${PPStyles.profilePage__link} text text_type_main-medium`}
       activeStyle={{ color: '#F2F2F3' }} onClick={logout}>
         Выход
       </NavLink>
@@ -84,7 +92,6 @@ export const ProfilePage = () => {
           type={'text'}
           placeholder={'Имя'}
           onChange={changeFormData}
-
           icon={'EditIcon'}
           value={formData.name}
           name={'name'}
@@ -95,7 +102,6 @@ export const ProfilePage = () => {
         <Input
           type={'email'}
           name={'email'}
-
           placeholder={'E-mail'}
           onChange={changeFormData}
           icon={'EditIcon'}
@@ -107,7 +113,6 @@ export const ProfilePage = () => {
         <Input
           type={'password'}
           name={'password'}
-
           placeholder={'Пароль'}
           onChange={changeFormData}
           icon={'EditIcon'}

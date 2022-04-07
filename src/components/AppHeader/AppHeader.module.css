@@ -28,10 +28,10 @@
 
 .list__link {
     text-decoration: none;
-    color: inherit;
+    color: #8585AD;
     display: flex;
 }
 
-.account__link {
-    composes: list__link;
+.list__link:hover {
+    opacity: .8;
 }

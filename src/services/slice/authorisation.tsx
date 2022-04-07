@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { baseUrl, checkResponse } from "../../utils/utils";
 import { setCookie, getCookie, deleteCookie } from "../../utils/cookies";
+import { useLocation } from 'react-router-dom'
 export const initialState = {
   auth: false,
   loading: false,

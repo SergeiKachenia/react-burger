@@ -6,17 +6,18 @@ import {
   ProfileIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import AppHeaderStyles from "./AppHeader.module.css";
-import { NavLink, Link } from 'react-router-dom'
+import { NavLink, Link, useLocation } from 'react-router-dom'
 
 function AppHeader() {
+  const location = useLocation()
   return (
     <header className={`${AppHeaderStyles.header} pt-4 pb-4`}>
       <div className={AppHeaderStyles.header__wrap}>
         <nav className={AppHeaderStyles.header__nav}>
           <ul className={AppHeaderStyles.list}>
             <li className={AppHeaderStyles.list__item}>
-              <NavLink to={"/"} className={AppHeaderStyles.list__link} href={"#"}>
-                <BurgerIcon type="primary" />
+              <NavLink to={"/"} exact className={AppHeaderStyles.list__link} href={"#"} activeStyle={{ color: '#F2F2F3' }}>
+                <BurgerIcon type={ location.pathname === '/' ? 'primary' : 'secondary' } />
                 <span
                   className={`${AppHeaderStyles.list__title} ml-2 text text_type_main-default`}
                 >
@@ -25,10 +26,10 @@ function AppHeader() {
               </NavLink>
             </li>
             <li className={AppHeaderStyles.list__item}>
-              <NavLink to={"/feed"} className={AppHeaderStyles.list__link} href={"#"}>
-                <ListIcon type="secondary" />
+              <NavLink to={"/feed"} exact className={AppHeaderStyles.list__link} href={"#"} activeStyle={{ color: '#F2F2F3' }}>
+                <ListIcon type={ location.pathname === '/feed' ? 'primary' : 'secondary' } />
                 <span
-                  className={`${AppHeaderStyles.list__title} ml-2 text text_type_main-default text_color_inactive`}
+                  className={`${AppHeaderStyles.list__title} ml-2 text text_type_main-default`}
                 >
                   Лента заказов
                 </span>
@@ -41,10 +42,10 @@ function AppHeader() {
           <Logo />
         </Link>
         <div className={AppHeaderStyles.account}>
-          <NavLink to={"/profile"} className={AppHeaderStyles.account__link} href={"#"}>
-            <ProfileIcon type="secondary" />
+          <NavLink to={"/profile"} exact className={AppHeaderStyles.list__link} href={"#"} activeStyle={{ color: '#F2F2F3' }}>
+            <ProfileIcon type={location.pathname !== '/profile' && location.pathname !== '/profile/orders' ? 'secondary' : 'primary'} />
             <span
-              className={`${AppHeaderStyles.account__title} ml-2 text text_type_main-default text_color_inactive`}
+              className={`${AppHeaderStyles.account__title} ml-2 text text_type_main-default`}
             >
               Личный кабинет
             </span>

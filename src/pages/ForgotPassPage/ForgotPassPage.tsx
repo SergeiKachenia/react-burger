@@ -26,6 +26,12 @@ export const ForgotPassPage = () => {
       )
     }
 
+    if (!forgotPassReqSuccess) {
+      return (
+        <Redirect to='/' />
+      )
+    }
+
     if (auth) {
       return (
         // @ts-ignore

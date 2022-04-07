@@ -16,11 +16,15 @@ import {
   closeOrderModal,
   sendOrderInfo,
   getTotalSum,
-  dragIngredients,
 } from "../../services/slice/ingredients";
 import ConstructorItem from "../ConstructorItem/ConstructorItem"
+import { authSelector } from "../../services/slice/authorisation";
+import { useHistory } from 'react-router-dom'
+
 function BurgerConstructor() {
+  const { auth } = useSelector(authSelector)
   const dispatch = useDispatch();
+const history = useHistory();
   const { totalSum, cartIngredients, orderModal } =
     useSelector(ingredientsSelector);
 
@@ -46,6 +50,18 @@ function BurgerConstructor() {
     // @ts-ignore
     dispatch(getTotalSum());
   }, [cartIngredients]);
+
+
+  const sendOrder = () => {
+    if(!auth) {
+      history.replace({ pathname: '/login' });
+      return;
+    }
+    else {
+      // @ts-ignore
+      dispatch(sendOrderInfo(cartIngredients));
+    }
+  }
 
 
   const border = isHover ? "#4C4CFF 3px solid" : "none";
@@ -145,7 +161,7 @@ function BurgerConstructor() {
             type="primary"
             size="medium"
             onClick={() => {
-              dispatch(sendOrderInfo(cartIngredients));
+              {sendOrder()};
             }}
           >
             <span className="text text_type_main-default">Оформить заказ</span>
