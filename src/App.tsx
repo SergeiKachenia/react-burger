@@ -7,10 +7,13 @@ import {ForgotPassPage } from "./pages/ForgotPassPage/ForgotPassPage"
 import { ResetPassPage } from "./pages/ResetPassPage/ResetPassPage"
 import { PageNotFound } from "./pages/PageNotFound/PageNotFound";
 import { ProfilePage } from "./pages/ProfilePage/ProfilePage";
+import { IngredientPage } from "./pages/IngredientPage/IngredientPage";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { IngredientDetails } from './components/IngredientDetails/IngredientDetails'
+import { Modal } from './components/Modal/Modal'
 import {
   fetchIngredients,
 } from "./services/slice/ingredients";
@@ -38,6 +41,11 @@ function App() {
   console.log(location)
   // @ts-ignore
   const background = location.state && location.state.background;
+
+  const closeModal = () => {
+    history.goBack()
+  }
+
   return (
     <>
       <AppHeader />
@@ -62,10 +70,20 @@ function App() {
           <Route path="/profile" exact={true}>
           <ProfilePage />
           </Route>
+          <Route path="/ingredients/:id" exact={true}>
+            <IngredientPage />
+            </Route>
           <Route>
           <PageNotFound />
           </Route>
       </Switch>
+      {background &&
+        <Route path='/ingredients/:id' >
+          <Modal onClose={closeModal} title={'Детали ингредиента'}>
+            <IngredientDetails />
+          </Modal>
+        </Route>
+      }
     </>
   );
 }

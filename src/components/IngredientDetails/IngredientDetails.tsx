@@ -1,59 +1,62 @@
 import IDStyles from "./IngredientDetails.module.css";
 import PropTypes from "prop-types";
+import { useParams } from 'react-router-dom'
+import { ingredientsSelector } from '../../services/slice/ingredients'
+import { useSelector } from 'react-redux'
+export const IngredientDetails = () => {
 
-function IngredientDetails({ item }) {
+
+  const { ingredients} = useSelector(ingredientsSelector)
+  //@ts-ignore
+  const { id } = useParams()
+  console.log(id)
+  const currentIngredient =  ingredients.find(item => item._id === id)
+
   return (
     <>
-      <img className={IDStyles.image} src={item.image} alt={item.name} />
-      <p className={"text text_type_main-medium mt-4 mb-8"}>{item.name}</p>
+   <section>
+      <img className={IDStyles.image} //@ts-ignore
+      src={currentIngredient.image} alt={currentIngredient.name} />
+      <p //@ts-ignore
+      className={"text text_type_main-medium mt-4 mb-8"}>{currentIngredient.name}</p>
       <div>
         <ul className={IDStyles.list}>
           <li
             className={`${IDStyles.list__item} text text_type_main-default text_color_inactive`}
           >
             Калории,ккал
-            <span className="text text_type_digits-default">
-              {item.calories}
+            <span //@ts-ignore
+            className="text text_type_digits-default">{currentIngredient.calories}
             </span>
           </li>
           <li
             className={`${IDStyles.list__item} text text_type_main-default text_color_inactive`}
           >
             Белки, г
-            <span className="text text_type_digits-default">
-              {item.proteins}
+            <span //@ts-ignore
+            className="text text_type_digits-default">{currentIngredient.proteins}
             </span>
           </li>
           <li
             className={`${IDStyles.list__item} text text_type_main-default text_color_inactive`}
           >
             Жиры, г
-            <span className="text text_type_digits-default">{item.fat}</span>
+            <span //@ts-ignore
+            className="text text_type_digits-default">{currentIngredient.fat}</span>
           </li>
           <li
             className={`${IDStyles.list__item} text text_type_main-default text_color_inactive`}
           >
             Углеводы, г
-            <span className="text text_type_digits-default">
-              {item.carbohydrates}
+            <span //@ts-ignore
+            className="text text_type_digits-default"> {currentIngredient.carbohydrates}
             </span>
           </li>
         </ul>
       </div>
+      </section>
     </>
   );
-}
+    }
 
 export default IngredientDetails;
-
-IngredientDetails.propTypes = {
-  data: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    calories: PropTypes.number.isRequired,
-    proteins: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
-    carbohydrates: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
-  }),
-  item: PropTypes.object.isRequired,
-};

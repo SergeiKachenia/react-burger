@@ -117,17 +117,6 @@ function BurgerIngredients() {
             </ul>
           </section>
         </div>
-        {activeIngredientDetailsModal && (
-          <Modal
-            onClose={() => {
-              // @ts-ignore
-              dispatch(removeIngredientDetails());
-            }}
-            title={"Детали ингредиента"}
-          >
-            <IngredientDetails item={ingredientDetails} />
-          </Modal>
-        )}
       </section>
     )
   );
