@@ -8,6 +8,7 @@ import { ResetPassPage } from "./pages/ResetPassPage/ResetPassPage"
 import { PageNotFound } from "./pages/PageNotFound/PageNotFound";
 import { ProfilePage } from "./pages/ProfilePage/ProfilePage";
 import { IngredientPage } from "./pages/IngredientPage/IngredientPage";
+import { ProtectedRoute } from "./components/ProtectedRoute/ProtectedRoute";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useEffect } from "react";
@@ -67,9 +68,9 @@ function App() {
           <Route path="/reset-password" exact={true}>
           <ResetPassPage />
           </Route>
-          <Route path="/profile" exact={true}>
+          <ProtectedRoute path="/profile">
           <ProfilePage />
-          </Route>
+          </ProtectedRoute>
           <Route path="/ingredients/:id" exact={true}>
             <IngredientPage />
             </Route>

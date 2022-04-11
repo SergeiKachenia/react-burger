@@ -139,7 +139,7 @@ const authSlice = createSlice({
       state.loading = true;
     },
     getTokenSuccess: (state, { payload }) => {
-      setCookie("accessToken", payload.accessToken, { expires: 20 * 60 });
+      setCookie("accessToken", payload.accessToken, {});
       setCookie("refreshToken", payload.refreshToken, {});
       state.auth = true;
     },
@@ -291,10 +291,14 @@ export const getUserRequest = () => {
         const actualData = await res.json();
         dispatch(getUserSuccess(actualData));
       } else {
-        getTokenRequest();
-        getUserRequest();
+        await getTokenRequest();
+        await getUserRequest();
       }
     } catch (error) {
+      if (error.status === 'jwt expired') {
+        await getTokenRequest();
+        await getUserRequest();
+      }
       dispatch(getUserFailed(error.message));
     }
   };
@@ -321,6 +325,10 @@ export const updateUserRequest = (form) => {
         await getUserRequest();
       }
     } catch (error) {
+      if (error.status === 'jwt expired') {
+        await getTokenRequest();
+        await getUserRequest();
+      }
       dispatch(updateUserFailed(error.message));
     }
   };

@@ -64,3 +64,20 @@
     text-align: center;
     color: red;
 }
+
+.profilePage__button {
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 30px;
+    color: #8585AD;
+    text-decoration: none;
+    text-align: left;
+    margin-bottom: 34px;
+    background: #131316;
+    border: none;
+    cursor: pointer;
+}
+
+.profilePage__button:hover {
+    opacity: .8;
+}

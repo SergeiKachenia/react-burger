@@ -12,6 +12,7 @@ export const ProfilePage = () => {
     name: ''
   });
   const location = useLocation()
+
   const dispatch = useDispatch()
   const changeFormData = e => {
     addFormData({
@@ -20,8 +21,12 @@ export const ProfilePage = () => {
     })
   }
   const logout = () => {
+    if (location.pathname === '/login') {
     dispatch(logoutRequest());
-
+    } else {
+      <Redirect to='/login' />
+      dispatch(logoutRequest());
+    }
     }
 
   const resetUserInfo = e => {
@@ -54,12 +59,6 @@ export const ProfilePage = () => {
   }, [])
 
 
-  if (!auth) {
-    return (
-          // @ts-ignore
-      <Redirect to={location?.state?.from || '/login' } />
-    )
-  }
 
   return (
     <main className={PPStyles.profilePage__main}>
@@ -76,12 +75,11 @@ export const ProfilePage = () => {
       activeStyle={{ color: '#F2F2F3' }}>
         История заказов
       </NavLink>
-      <NavLink
-      to= {auth? '/profile': '/login'} exact={true}
-      className={`${PPStyles.profilePage__link} text text_type_main-medium`}
-      activeStyle={{ color: '#F2F2F3' }} onClick={logout}>
+      <button
+      className={`${PPStyles.profilePage__button} text text_type_main-medium`}
+      onClick={logout}>
         Выход
-      </NavLink>
+      </button>
       <span className={`${PPStyles.profilePage__text} text text_type_main-default text_color_inactive mt-20`} >
       В этом разделе вы можете
       изменить свои персональные данные</span>
