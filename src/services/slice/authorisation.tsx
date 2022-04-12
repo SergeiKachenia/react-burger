@@ -291,13 +291,12 @@ export const getUserRequest = () => {
         const actualData = await res.json();
         dispatch(getUserSuccess(actualData));
       } else {
-        await getTokenRequest();
-        await getUserRequest();
+        dispatch(getTokenRequest()).then(()=> dispatch(getUserRequest()))
       }
     } catch (error) {
-      if (error.status === 'jwt expired') {
-        await getTokenRequest();
-        await getUserRequest();
+      console.log(error.message);
+      if (error.message === 'Error status - 403') {
+        dispatch(getTokenRequest()).then(()=> dispatch(getUserRequest()))
       }
       dispatch(getUserFailed(error.message));
     }
@@ -321,13 +320,12 @@ export const updateUserRequest = (form) => {
         const actualData = await res.json();
         dispatch(updateUserSuccess(actualData));
       } else {
-        await getTokenRequest();
-        await getUserRequest();
+        dispatch(getTokenRequest()).then(()=> dispatch(updateUserRequest(form)))
       }
     } catch (error) {
-      if (error.status === 'jwt expired') {
-        await getTokenRequest();
-        await getUserRequest();
+      console.log(error.message);
+      if (error.message === 'Error status - 403') {
+        dispatch(getTokenRequest()).then(()=> dispatch(updateUserRequest(form)))
       }
       dispatch(updateUserFailed(error.message));
     }

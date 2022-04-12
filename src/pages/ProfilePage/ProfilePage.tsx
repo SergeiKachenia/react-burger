@@ -3,9 +3,10 @@ import { useState, useEffect } from 'react'
 import PPStyles from './ProfilePage.module.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components'
-import { resetError, logoutRequest, authSelector, getUserRequest, updateUserRequest } from '../../services/slice/authorisation'
+import { resetError, logoutRequest, authSelector, getUserRequest, updateUserRequest, getTokenRequest } from '../../services/slice/authorisation'
+import {getCookie} from '../../utils/cookies'
 export const ProfilePage = () => {
-  const { error, userData, auth } = useSelector(authSelector)
+  const { error, userData} = useSelector(authSelector)
   const [formData, addFormData] = useState({
     email: '',
     password: '',
@@ -40,12 +41,13 @@ export const ProfilePage = () => {
 
   const updateUserInfo = e => {
     e.preventDefault()
-    // @ts-ignore
+       // @ts-ignore
     dispatch(updateUserRequest(formData))
+
   }
 
   useEffect(() => {
-    dispatch(getUserRequest())
+  dispatch(getUserRequest())
     addFormData({
       name: userData.name,
       email: userData.email,
