@@ -14,6 +14,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { IngredientDetails } from './components/IngredientDetails/IngredientDetails'
+import { FeedPage} from './pages/FeedPage/FeedPage'
 import { Modal } from './components/Modal/Modal'
 import {
   fetchIngredients,
@@ -73,6 +74,9 @@ function App() {
           </ProtectedRoute>
           <Route path="/ingredients/:id" exact={true}>
             <IngredientPage />
+            </Route>
+            <Route path="/feed" exact={true}>
+            <FeedPage />
             </Route>
           <Route>
           <PageNotFound />

@@ -7,38 +7,6 @@
     margin: 120px auto 0;
 }
 
-.profilePage__navMenu {
-    display: flex;
-    flex-direction: column;
-    max-width: 320px;
-    align-items: flex-start;
-    margin-right: 60px;
-}
-
-.profilePage__link {
-    font-weight: 700;
-    font-size: 24px;
-    line-height: 30px;
-    color: #8585AD;
-    text-decoration: none;
-    text-align: left;
-    margin-bottom: 34px;
-}
-
-.profilePage__link:hover {
-    opacity: .8;
-}
-
-.profilePage__text {
-    text-align: left;
-    margin-top: 80px;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
-    color: #8585AD;
-    opacity: 0.4;
-}
-
 .profilePage__profileInfo {
     display: flex;
     flex-direction: column;

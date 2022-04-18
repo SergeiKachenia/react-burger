@@ -1,0 +1,24 @@
+.feedPage__main {
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+    max-width: 1240px;
+    width: 100%;
+    justify-content: flex-start;
+    padding: 0;
+}
+
+.feedPage__title {
+    margin: 40px 0 20px;
+    padding: 0;
+    max-width: 100%;
+}
+
+.feedPage__feeds {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-height: 80vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+}

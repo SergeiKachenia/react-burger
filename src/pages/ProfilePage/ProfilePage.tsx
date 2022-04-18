@@ -1,10 +1,10 @@
-import { Redirect, NavLink, useLocation } from 'react-router-dom'
+
 import { useState, useEffect } from 'react'
 import PPStyles from './ProfilePage.module.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components'
-import { resetError, logoutRequest, authSelector, getUserRequest, updateUserRequest, getTokenRequest } from '../../services/slice/authorisation'
-import {getCookie} from '../../utils/cookies'
+import { resetError, authSelector, getUserRequest, updateUserRequest } from '../../services/slice/authorisation'
+import {ProfileNavigation} from '../../components/ProfileNavigation/ProfileNavigation'
 export const ProfilePage = () => {
   const { error, userData} = useSelector(authSelector)
   const [formData, addFormData] = useState({
@@ -12,8 +12,6 @@ export const ProfilePage = () => {
     password: '',
     name: ''
   });
-  const location = useLocation()
-
   const dispatch = useDispatch()
   const changeFormData = e => {
     addFormData({
@@ -21,14 +19,6 @@ export const ProfilePage = () => {
       [e.target.name]: e.target.value
     })
   }
-  const logout = () => {
-    if (location.pathname === '/login') {
-    dispatch(logoutRequest());
-    } else {
-      <Redirect to='/login' />
-      dispatch(logoutRequest());
-    }
-    }
 
   const resetUserInfo = e => {
     e.preventDefault()
@@ -64,28 +54,9 @@ export const ProfilePage = () => {
 
   return (
     <main className={PPStyles.profilePage__main}>
-      <section className={PPStyles.profilePage__navMenu}>
-      <NavLink
-      to='/profile' exact={true}
-      className={`${PPStyles.profilePage__link} text text_type_main-medium`}
-      activeStyle={{ color: '#F2F2F3' }}>
-        Профиль
-      </NavLink>
-      <NavLink
-      to='/profile/orders' exact={true}
-      className={`${PPStyles.profilePage__link} text text_type_main-medium`}
-      activeStyle={{ color: '#F2F2F3' }}>
-        История заказов
-      </NavLink>
-      <button
-      className={`${PPStyles.profilePage__button} text text_type_main-medium`}
-      onClick={logout}>
-        Выход
-      </button>
-      <span className={`${PPStyles.profilePage__text} text text_type_main-default text_color_inactive mt-20`} >
-      В этом разделе вы можете
-      изменить свои персональные данные</span>
-      </section>
+      <section>
+     <ProfileNavigation />
+     </section>
       <section className={PPStyles.profilePage__profileInfo}>
       <form className={`${PPStyles.profilePage__form} input_size_default`} onFocus={null}>
         <Input
