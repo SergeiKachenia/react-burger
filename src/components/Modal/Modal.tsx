@@ -5,7 +5,7 @@ import ModalOverlay from "../ModalOverlay/ModalOverlay";
 import ModalStyles from "./Modal.module.css";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
-function Modal(props: any) {
+export function Modal(props: any) {
   const modals = document.getElementById("react-modals")!;
 
   useEffect(() => {

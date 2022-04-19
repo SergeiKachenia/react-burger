@@ -17,3 +17,8 @@
 .ingredient__title {
     text-align: center;
 }
+
+.ingredient__list {
+    list-style-type: none;
+    display: contents;
+}

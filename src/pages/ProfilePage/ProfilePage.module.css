@@ -1,0 +1,83 @@
+.profilePage__main {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: flex-start;
+    max-width: 1240px;
+    margin: 120px auto 0;
+}
+
+.profilePage__navMenu {
+    display: flex;
+    flex-direction: column;
+    max-width: 320px;
+    align-items: flex-start;
+    margin-right: 60px;
+}
+
+.profilePage__link {
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 30px;
+    color: #8585AD;
+    text-decoration: none;
+    text-align: left;
+    margin-bottom: 34px;
+}
+
+.profilePage__link:hover {
+    opacity: .8;
+}
+
+.profilePage__text {
+    text-align: left;
+    margin-top: 80px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #8585AD;
+    opacity: 0.4;
+}
+
+.profilePage__profileInfo {
+    display: flex;
+    flex-direction: column;
+    max-width: 480px;
+}
+
+.profilePage__form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+}
+
+.profilePage__buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.error {
+    text-align: center;
+    color: red;
+}
+
+.profilePage__button {
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 30px;
+    color: #8585AD;
+    text-decoration: none;
+    text-align: left;
+    margin-bottom: 34px;
+    background: #131316;
+    border: none;
+    cursor: pointer;
+}
+
+.profilePage__button:hover {
+    opacity: .8;
+}
