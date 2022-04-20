@@ -1,4 +1,4 @@
-import { getWSMessage } from "../slice/websocket";
+
 import { actions } from '../slice/websocket'
 
 
@@ -12,11 +12,10 @@ export const wsMiddleware = ( wsActions: typeof actions) => {
       const { dispatch } = store;
       const { type, payload } = action;
 
-      const { startWSConnection, stopWSConnection, successWSConnection, sendWSMessage, closedWSConnection, errorWSConnection} = wsActions;
+      const { startWSConnection, stopWSConnection, successWSConnection, getWSMessage, sendWSMessage, closedWSConnection, errorWSConnection} = wsActions;
 
       if (type === startWSConnection.type) {
-        const wsUrl = payload.token ? `${payload.url}?token=${payload.token}` : `${payload.url}`
-        socket = new WebSocket(wsUrl)
+        socket = new WebSocket(payload)
       }
       if (type === stopWSConnection.type) socket && socket.close(1000, 'CLOSE_NORMAL');
 

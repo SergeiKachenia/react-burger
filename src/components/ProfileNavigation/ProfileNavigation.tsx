@@ -15,6 +15,7 @@ export const ProfileNavigation = () => {
       dispatch(logoutRequest());
     }
     }
+const content = location.pathname === '/profile/orders' ? 'В этом разделе вы можете просмотреть свою историю заказов' : 'В этом разделе вы можете изменить свои персональные данные';
 
   return (
 
@@ -36,9 +37,8 @@ export const ProfileNavigation = () => {
     onClick={logout}>
       Выход
     </button>
-    <span className={`${PNStyles.profileNavigation__text} text text_type_main-default text_color_inactive mt-20`} >
-    В этом разделе вы можете
-    изменить свои персональные данные</span>
+    <span className={`${PNStyles.profileNavigation__text} text text_type_main-default text_color_inactive mt-20`}>
+   {content}</span>
     </section>
   )
 }

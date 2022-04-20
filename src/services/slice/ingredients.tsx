@@ -1,6 +1,7 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { createSlice} from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from 'uuid';
 import {baseUrl, checkResponse} from '../../utils/utils'
+import {getCookie} from '../../utils/cookies'
 export const initialState = {
   ingredients: [],
   loading: false,
@@ -159,7 +160,8 @@ export const sendOrderInfo = (ingredients) => {
     try {
       const res = await fetch(`${baseUrl}/orders`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json",
+        "authorization": getCookie('accessToken') },
         body: JSON.stringify({ ingredients: ingredients.map((i) => i._id) }),
       });
       checkResponse(res);

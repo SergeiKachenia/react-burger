@@ -53,13 +53,12 @@ const history = useHistory();
 
 
   const sendOrder = () => {
-    if(!auth) {
-      history.replace({ pathname: '/login' });
-      return;
+    if(auth) {
+      dispatch(sendOrderInfo(cartIngredients));
     }
     else {
       // @ts-ignore
-      dispatch(sendOrderInfo(cartIngredients));
+      history.replace({ pathname: '/login' });
     }
   }
 

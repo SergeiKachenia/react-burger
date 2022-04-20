@@ -19,11 +19,11 @@ export const OrdersList = ({order, idIngredients, page}) => {
 }
 const searchIngredientsImages = id => {
   return id.map(item => {
-    const listImages = searchIngredient(item);
+    const imagesList = searchIngredient(item);
     // @ts-ignore
-    if (listImages.length) {
+    if (imagesList.length) {
       // @ts-ignore
-      return listImages[0].image;
+      return imagesList[0].image;
     }
   });
 }
@@ -42,20 +42,20 @@ const price = searchIngredientsPrice(idIngredients).reduce((acc, price) => acc +
 
 return (
   <>
-    <Link className={OLStyles.item} to={{ pathname: `/${page}/${order._id}`, state: { background: location } }}>
-      <div className={OLStyles.item_header}>
-        <span className={`${OLStyles.item_id} text_type_digits-default`}>#{order.number}</span>
-        <time className={`${OLStyles.item_date} text text_color_inactive text_type_main-default`}>{getDate(order.createdAt)}</time>
+    <Link className={OLStyles.ordersList__item} to={{ pathname: `/${page}/${order._id}`, state: { background: location } }}>
+      <div className={OLStyles.ordersList__header}>
+        <span className={`${OLStyles.ordersList__itemId} text_type_digits-default`}>#{order.number}</span>
+        <time className={`${OLStyles.ordersList__itemDate} text text_color_inactive text_type_main-default`}>{getDate(order.createdAt)}</time>
       </div>
       <h2 className={'text text_type_main-medium'}>{order.name}</h2>
       {location.pathname.startsWith('/profile') &&
         <span className={'text text_type_main-small'}>{getStatus(order.status)}</span>
       }
-      <div className={OLStyles.item_desc}>
-        <ul className={OLStyles.desc_images}>
+      <div className={OLStyles.ordersList__itemDesc}>
+        <ul className={OLStyles.ordersList__itemImages}>
             <ImagesList ingredientsImages={searchIngredientsImages(idIngredients)} />
         </ul>
-        <div className={OLStyles.price}>
+        <div className={OLStyles.ordersList__itemPrice}>
           {price &&
           <span className={'text_type_digits-default'}>{price}</span>}
           <CurrencyIcon type="primary" />

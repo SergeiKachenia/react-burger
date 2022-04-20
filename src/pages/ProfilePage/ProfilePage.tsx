@@ -54,9 +54,7 @@ export const ProfilePage = () => {
 
   return (
     <main className={PPStyles.profilePage__main}>
-      <section>
      <ProfileNavigation />
-     </section>
       <section className={PPStyles.profilePage__profileInfo}>
       <form className={`${PPStyles.profilePage__form} input_size_default`} onFocus={null}>
         <Input

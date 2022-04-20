@@ -1,7 +1,7 @@
 .profileNavigation__navMenu {
     display: flex;
     flex-direction: column;
-    max-width: 320px;
+    width: 320px;
     align-items: flex-start;
     margin-right: 60px;
 }
@@ -37,7 +37,6 @@
     color: #8585AD;
     text-decoration: none;
     text-align: left;
-    margin-bottom: 34px;
     background: #131316;
     border: none;
     cursor: pointer;

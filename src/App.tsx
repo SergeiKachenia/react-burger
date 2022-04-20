@@ -15,6 +15,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { IngredientDetails } from './components/IngredientDetails/IngredientDetails'
 import { FeedPage} from './pages/FeedPage/FeedPage'
+import { OrdersPage } from "./pages/OrdersPage/OrdersPage";
 import { Modal } from './components/Modal/Modal'
 import {
   fetchIngredients,
@@ -69,8 +70,11 @@ function App() {
           <Route path="/reset-password" exact={true}>
           <ResetPassPage />
           </Route>
-          <ProtectedRoute path="/profile">
+          <ProtectedRoute path="/profile" exact={true}>
           <ProfilePage />
+          </ProtectedRoute>
+          <ProtectedRoute path="/profile/orders" exact={true}>
+          <OrdersPage />
           </ProtectedRoute>
           <Route path="/ingredients/:id" exact={true}>
             <IngredientPage />

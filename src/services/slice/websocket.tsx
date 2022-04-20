@@ -54,32 +54,3 @@ export const actions = wsSlice.actions
 
 export const wsSelector = state => state.webSocket;
 export const webSocketReducer = wsSlice.reducer
-
-
-export const getFeedRequest = () => {
-  return (dispatch = useAppDispatch()) => {
-    dispatch(
-      startWSConnection({url: `${wsUrl}/all`})
-    )
-
-  }
-}
-
-export const getPersonalFeedRequest = () => {
-  return (dispatch = useAppDispatch()) => {
-    dispatch(
-      startWSConnection({
-        url: `${wsUrl}`,
-        token: getCookie('accessToken').slice(7)
-      })
-    )
-  }
-}
-
-export const stopFeedRequest = () => {
-  return (dispatch = useAppDispatch()) => {
-    dispatch(
-      stopWSConnection()
-    )
-  }
-}
