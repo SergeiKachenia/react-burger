@@ -1,14 +1,12 @@
 import {OrdersList} from "../../components/OrdersList/OrdersList";
 import {ProfileNavigation} from "../../components/ProfileNavigation/ProfileNavigation"
 import OPStyles from "./OrdersPage.module.css";
-import {useSelector, useDispatch} from "react-redux";
+import {useSelector} from "react-redux";
 import {wsSelector} from "../../services/slice/websocket"
 import { useWebSocket } from "../../hooks/wsHook";
 export const OrdersPage = () => {
 useWebSocket();
-const dispatch = useDispatch()
   const {feedOrders} = useSelector(wsSelector)
-
 
   return (
     <>

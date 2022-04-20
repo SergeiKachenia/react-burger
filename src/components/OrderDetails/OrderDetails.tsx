@@ -1,4 +1,4 @@
-import React from "react";
+
 import ODStyles from "./OrderDetails.module.css";
 import iconDone from "../../images/done.png";
 import { ingredientsSelector } from "../../services/slice/ingredients";

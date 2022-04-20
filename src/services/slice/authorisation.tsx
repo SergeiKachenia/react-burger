@@ -40,7 +40,7 @@ const authSlice = createSlice({
       state.userData.name = payload.user.name;
       state.userData.email = payload.user.email;
       state.userData.password = "";
-      setCookie("accessToken", payload.accessToken, { expires: 20 * 60 });
+      setCookie("accessToken", payload.accessToken, {});
       setCookie("refreshToken", payload.refreshToken, {});
     },
     registerFailed: (state, { payload }) => {
@@ -284,7 +284,7 @@ export const getUserRequest = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            authorization: getCookie("accessToken"),
+            "Authorization": getCookie("accessToken"),
           },
         });
         checkResponse(res);
@@ -312,7 +312,7 @@ export const updateUserRequest = (form) => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            authorization: getCookie("accessToken"),
+            "Authorization": getCookie("accessToken"),
           },
           body: JSON.stringify(form),
         });

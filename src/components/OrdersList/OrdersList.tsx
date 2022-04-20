@@ -42,7 +42,7 @@ const price = searchIngredientsPrice(idIngredients).reduce((acc, price) => acc +
 
 return (
   <>
-    <Link className={OLStyles.ordersList__item} to={{ pathname: `/${page}/${order._id}`, state: { background: location } }}>
+    <Link className={OLStyles.ordersList__item} to={{ pathname: `${page}/${order._id}`, state: { background: location } }}>
       <div className={OLStyles.ordersList__header}>
         <span className={`${OLStyles.ordersList__itemId} text_type_digits-default`}>#{order.number}</span>
         <time className={`${OLStyles.ordersList__itemDate} text text_color_inactive text_type_main-default`}>{getDate(order.createdAt)}</time>

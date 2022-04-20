@@ -1,8 +1,7 @@
 import React from "react";
 import FPStyles from './FeedPage.module.css'
 import {OrdersList} from "../../components/OrdersList/OrdersList"
-import {useSelector, useDispatch} from 'react-redux';
-import { useEffect } from 'react'
+import {useSelector} from 'react-redux';
 import {nanoid} from "@reduxjs/toolkit";
 import { wsSelector} from "../../services/slice/websocket";
 import { useWebSocket } from "../../hooks/wsHook";
@@ -15,7 +14,6 @@ export const FeedPage = () => {
 
 useWebSocket()
 console.log(wsConnected)
-console.log(feedOrders)
 
 const filterStatus = (status) => {
   return feedOrders.filter((item) => item.status === status);

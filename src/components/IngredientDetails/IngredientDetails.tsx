@@ -11,10 +11,9 @@ export const IngredientDetails = () => {
   const { id } = useParams()
   console.log(id)
   const currentIngredient =  ingredients.find(item => item._id === id)
-
   return (
     <>
-   <section>
+   <section className={IDStyles.main}>
       <img className={IDStyles.image} //@ts-ignore
       src={currentIngredient.image} alt={currentIngredient.name} />
       <p //@ts-ignore

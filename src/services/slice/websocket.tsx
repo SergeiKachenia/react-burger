@@ -1,7 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {useAppDispatch} from '../../index'
-import {wsUrl} from '../../utils/utils'
-import {getCookie} from '../../utils/cookies'
+
 const initialState = {
   webSocket: null,
   wsConnected: false,
