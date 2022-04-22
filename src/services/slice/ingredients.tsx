@@ -71,7 +71,7 @@ const ingredientsSlice = createSlice({
     removeIngredientFromCart: (state) => {
     state.cartIngredients = [];
     },
-    sendOrder: (state) => {
+    sendOrderInProgress: (state) => {
       state.loading = true;
     },
     sendOrderSuccess: (state, { payload }) => {
@@ -126,7 +126,7 @@ export const {
   removeIngredientDetails,
   addIngredientToCart,
   deleteIngredientFromCart,
-  sendOrder,
+  sendOrderInProgress,
   sendOrderSuccess,
   sendOrderFail,
   closeOrderModal,
@@ -156,7 +156,8 @@ export const fetchIngredients = () => {
 export const sendOrderInfo = (ingredients) => {
   return async (dispatch) => {
     // @ts-ignore
-    dispatch(sendOrder());
+    dispatch(sendOrderInProgress());
+    console.log(initialState.loading)
     try {
       const res = await fetch(`${baseUrl}/orders`, {
         method: "POST",

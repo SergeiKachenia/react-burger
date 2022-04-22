@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
 import { ingredientsReducer } from "./slice/ingredients";
-import {authReducer} from "./slice/authorisation"
+import { authReducer } from "./slice/authorisation";
 import { webSocketReducer } from "./slice/websocket";
 
 const rootReducer = combineReducers({

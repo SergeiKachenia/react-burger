@@ -1,79 +1,118 @@
-import { Redirect, Link, useLocation } from 'react-router-dom'
-import { useState, useEffect } from 'react'
-import LPStyles from './LoginPage.module.css'
-import { useDispatch, useSelector } from 'react-redux'
-import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components'
-import { authSelector, resetError, loginRequest, resetForgotPassReqSuccess, resetResetPassReqSuccess } from '../../services/slice/authorisation'
-
+import { Redirect, Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import LPStyles from "./LoginPage.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  Button,
+  Input,
+  PasswordInput,
+} from "@ya.praktikum/react-developer-burger-ui-components";
+import {
+  authSelector,
+  resetError,
+  loginRequest,
+  resetForgotPassReqSuccess,
+  resetResetPassReqSuccess,
+} from "../../services/slice/authorisation";
 
 export const LoginPage = () => {
-
   const [formData, addFormData] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: "",
   });
 
-  const { error, auth } = useSelector(authSelector)
-  const location = useLocation()
-  const dispatch = useDispatch()
+  const { error, auth } = useSelector(authSelector);
+  const location = useLocation();
+  const dispatch = useDispatch();
 
-  const changeFormData = e => {
+  const changeFormData = (e) => {
     addFormData({
       ...formData,
-      [e.target.name]: e.target.value
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
 
   useEffect(() => {
-    dispatch(resetError())
-    dispatch(resetResetPassReqSuccess())
-    dispatch(resetForgotPassReqSuccess())
-  }, [])
+    dispatch(resetError());
+    dispatch(resetResetPassReqSuccess());
+    dispatch(resetForgotPassReqSuccess());
+  }, []);
 
-  const sendLoginForm = e => {
-    e.preventDefault()
+  const sendLoginForm = (e) => {
+    e.preventDefault();
     // @ts-ignore
-    dispatch(loginRequest(formData))
-  }
+    dispatch(loginRequest(formData));
+  };
 
   if (auth) {
     return (
-          // @ts-ignore
-      <Redirect to={location?.state?.from || '/' } />
-    )
+      // @ts-ignore
+      <Redirect to={location?.state?.from || "/"} />
+    );
   }
 
-
   return (
-    <main className = {LPStyles.loginPage__main}>
-      <div className = {LPStyles.loginPage__content}>
-<h1 className={`${LPStyles.loginPage__title} mb-6 text_type_main-medium`}> Вход </h1>
-<form className={`${LPStyles.loginPage__form} mb-20`} onSubmit={sendLoginForm}>
-<Input
-            type={'email'}
-            placeholder={'Ваш e-mail'}
+    <main className={LPStyles.loginPage__main}>
+      <div className={LPStyles.loginPage__content}>
+        <h1
+          className={`${LPStyles.loginPage__title} mb-6 text_type_main-medium`}
+        >
+          {" "}
+          Вход{" "}
+        </h1>
+        <form
+          className={`${LPStyles.loginPage__form} mb-20`}
+          onSubmit={sendLoginForm}
+        >
+          <Input
+            type={"email"}
+            placeholder={"Ваш e-mail"}
             onChange={changeFormData}
             value={formData.email}
-            name={'email'}
+            name={"email"}
             error={false}
-            errorText={'Ошибка'}
-            size={'default'} />
-            <PasswordInput
+            errorText={"Ошибка"}
+            size={"default"}
+          />
+          <PasswordInput
             onChange={changeFormData}
             value={formData.password}
-            name={'password'} />
-            { error && <span className={`${LPStyles.error} text text_type_main-medium mb-4`}>{error}</span> }
-            <Button type='primary' size='medium'>Войти</Button>
-</form>
-<div className={`${LPStyles.loginPage__buttons} mb-4 text_type_main-medium`}>
-          <span className='text_type_main-default'>Вы — новый пользователь?</span>
-          <Link to='/register' className={`${LPStyles.loginPage__link} ml-2 text_type_main-default`}>Зарегистрироваться</Link>
+            name={"password"}
+          />
+          {error && (
+            <span
+              className={`${LPStyles.error} text text_type_main-medium mb-4`}
+            >
+              {error}
+            </span>
+          )}
+          <Button type="primary" size="medium">
+            Войти
+          </Button>
+        </form>
+        <div
+          className={`${LPStyles.loginPage__buttons} mb-4 text_type_main-medium`}
+        >
+          <span className="text_type_main-default">
+            Вы — новый пользователь?
+          </span>
+          <Link
+            to="/register"
+            className={`${LPStyles.loginPage__link} ml-2 text_type_main-default`}
+          >
+            Зарегистрироваться
+          </Link>
         </div>
         <div className={`${LPStyles.loginPage__buttons} text_type_main-medium`}>
-          <span className='text_type_main-default'>Забыли пароль?</span>
-          <Link to='/forgot-password' className={`${LPStyles.loginPage__link} ml-2 text_type_main-default`}>Восстановить пароль</Link>
+          <span className="text_type_main-default">Забыли пароль?</span>
+          <Link
+            to="/forgot-password"
+            className={`${LPStyles.loginPage__link} ml-2 text_type_main-default`}
+          >
+            Восстановить пароль
+          </Link>
         </div>
       </div>
     </main>
-  )
-}
+  );
+};

@@ -1,4 +1,4 @@
-import React, { useEffect} from "react";
+import React, { useEffect, useState } from "react";
 import {
   ConstructorElement,
   Button,
@@ -16,21 +16,21 @@ import {
   closeOrderModal,
   sendOrderInfo,
   getTotalSum,
+  sendOrderInProgress,
 } from "../../services/slice/ingredients";
-import ConstructorItem from "../ConstructorItem/ConstructorItem"
+import ConstructorItem from "../ConstructorItem/ConstructorItem";
 import { authSelector } from "../../services/slice/authorisation";
-import { useHistory } from 'react-router-dom'
+import { useHistory } from "react-router-dom";
 
 function BurgerConstructor() {
-  const { auth } = useSelector(authSelector)
+  const { auth } = useSelector(authSelector);
   const dispatch = useDispatch();
-const history = useHistory();
-  const { totalSum, cartIngredients, orderModal } =
+  const history = useHistory();
+  const { totalSum, cartIngredients, orderModal, loading} =
     useSelector(ingredientsSelector);
 
   const bun = cartIngredients.find((item) => item.type === "bun");
   const other = cartIngredients.filter((item) => item.type !== "bun");
-
   const [{ isHover }, dropTarget] = useDrop({
     accept: "ingredient",
     drop: (item: { type: string; _id: string }) => {
@@ -51,17 +51,16 @@ const history = useHistory();
     dispatch(getTotalSum());
   }, [cartIngredients]);
 
-
   const sendOrder = () => {
-    if(auth) {
-      dispatch(sendOrderInfo(cartIngredients));
-    }
-    else {
+    if (auth) {
       // @ts-ignore
-      history.replace({ pathname: '/login' });
-    }
+      dispatch(sendOrderInProgress());
+      dispatch(sendOrderInfo(cartIngredients))
+    } else {
+      // @ts-ignore
+      history.replace({ pathname: "/login" });
   }
-
+}
 
   const border = isHover ? "#4C4CFF 3px solid" : "none";
 
@@ -104,8 +103,8 @@ const history = useHistory();
         >
           {other.length !== 0 &&
             other.map((item: AppPropsItem, index: number) => (
-            // @ts-ignore
-          <ConstructorItem item={item} index={index} key={item.id} />
+              // @ts-ignore
+              <ConstructorItem item={item} index={index} key={item.id} />
             ))}
         </ul>
       }
@@ -120,8 +119,7 @@ const history = useHistory();
           />
         )}
       </div>
-      {
-        cartIngredients.length >= 1 && (
+      {cartIngredients.length >= 1 && (
         <section className={`${ConstructorStyles.constructor__totalsum} mt-10`}>
           <div className={ConstructorStyles.constructor__wrap}>
             <span className="text text_type_digits-medium">{totalSum}</span>
@@ -160,14 +158,17 @@ const history = useHistory();
             type="primary"
             size="medium"
             onClick={() => {
-              {sendOrder()};
+              {
+                sendOrder();
+              }
+
             }}
+            disabled={loading? true : false}
           >
-            <span className="text text_type_main-default">Оформить заказ</span>
+            <span className="text text_type_main-default">{loading?'Заказ оформляется, подождите...':'Оформить заказ'}</span>
           </Button>
         </section>
-        )
-          }
+      )}
     </section>
   );
 }

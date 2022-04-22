@@ -1,4 +1,4 @@
-import {createSlice} from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   webSocket: null,
@@ -6,31 +6,28 @@ const initialState = {
   wsError: false,
   feedOrders: [],
   total: null,
-  totalToday: null
-}
-
+  totalToday: null,
+};
 
 export const wsSlice = createSlice({
-  name: 'webSocket',
+  name: "webSocket",
   initialState,
   reducers: {
-    startWSConnection: (state, {payload}) => {
-    },
+    startWSConnection: (state, { payload }) => {},
     stopWSConnection: (state) => {
-        state.wsConnected = false
-        state.wsError = false
+      state.wsConnected = false;
+      state.wsError = false;
     },
     successWSConnection: (state) => {
       state.wsConnected = true;
       state.wsError = false;
     },
-    getWSMessage: (state, {payload}) => {
+    getWSMessage: (state, { payload }) => {
       state.feedOrders = payload.orders;
       state.total = payload.total;
       state.totalToday = payload.totalToday;
     },
-    sendWSMessage: (state, {payload}) => {
-    },
+    sendWSMessage: (state, { payload }) => {},
 
     closedWSConnection: (state) => {
       state.wsConnected = false;
@@ -39,16 +36,21 @@ export const wsSlice = createSlice({
 
     errorWSConnection: (state) => {
       state.wsConnected = false;
-      state.wsError = true
+      state.wsError = true;
     },
   },
-
-
 });
 
-export const {startWSConnection, stopWSConnection, successWSConnection, getWSMessage, sendWSMessage, closedWSConnection, errorWSConnection} = wsSlice.actions
-export const actions = wsSlice.actions
+export const {
+  startWSConnection,
+  stopWSConnection,
+  successWSConnection,
+  getWSMessage,
+  sendWSMessage,
+  closedWSConnection,
+  errorWSConnection,
+} = wsSlice.actions;
+export const actions = wsSlice.actions;
 
-
-export const wsSelector = state => state.webSocket;
-export const webSocketReducer = wsSlice.reducer
+export const wsSelector = (state) => state.webSocket;
+export const webSocketReducer = wsSlice.reducer;

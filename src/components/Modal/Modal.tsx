@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 import ModalOverlay from "../ModalOverlay/ModalOverlay";
 import ModalStyles from "./Modal.module.css";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import IngredientDetails from "../IngredientDetails/IngredientDetails";
+
 
 export function Modal(props: any) {
   const modals = document.getElementById("react-modals")!;
