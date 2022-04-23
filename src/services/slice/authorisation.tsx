@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { baseUrl, checkResponse } from "../../utils/utils";
 import { setCookie, getCookie, deleteCookie } from "../../utils/cookies";
-import { useLocation } from 'react-router-dom'
+
 export const initialState = {
   auth: false,
   loading: false,
@@ -40,7 +40,7 @@ const authSlice = createSlice({
       state.userData.name = payload.user.name;
       state.userData.email = payload.user.email;
       state.userData.password = "";
-      setCookie("accessToken", payload.accessToken, { expires: 20 * 60 });
+      setCookie("accessToken", payload.accessToken, {});
       setCookie("refreshToken", payload.refreshToken, {});
     },
     registerFailed: (state, { payload }) => {
@@ -279,24 +279,20 @@ export const getUserRequest = () => {
   return async (dispatch) => {
     dispatch(getUserInProgress());
     try {
-      if (getCookie("accessToken")) {
-        const res = await fetch(`${baseUrl}/auth/user`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            authorization: getCookie("accessToken"),
-          },
-        });
-        checkResponse(res);
-        const actualData = await res.json();
-        dispatch(getUserSuccess(actualData));
-      } else {
-        dispatch(getTokenRequest()).then(()=> dispatch(getUserRequest()))
-      }
+      const res = await fetch(`${baseUrl}/auth/user`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: getCookie("accessToken"),
+        },
+      });
+      checkResponse(res);
+      const actualData = await res.json();
+      dispatch(getUserSuccess(actualData));
     } catch (error) {
       console.log(error.message);
-      if (error.message === 'Error status - 403') {
-        dispatch(getTokenRequest()).then(()=> dispatch(getUserRequest()))
+      if (error.message === "Error status - 403") {
+        dispatch(getTokenRequest()).then(() => dispatch(getUserRequest()));
       }
       dispatch(getUserFailed(error.message));
     }
@@ -307,25 +303,23 @@ export const updateUserRequest = (form) => {
   return async (dispatch) => {
     dispatch(updateUserInProgress());
     try {
-      if (getCookie("accessToken")) {
-        const res = await fetch(`${baseUrl}/auth/user`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            authorization: getCookie("accessToken"),
-          },
-          body: JSON.stringify(form),
-        });
-        checkResponse(res);
-        const actualData = await res.json();
-        dispatch(updateUserSuccess(actualData));
-      } else {
-        dispatch(getTokenRequest()).then(()=> dispatch(updateUserRequest(form)))
-      }
+      const res = await fetch(`${baseUrl}/auth/user`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: getCookie("accessToken"),
+        },
+        body: JSON.stringify(form),
+      });
+      checkResponse(res);
+      const actualData = await res.json();
+      dispatch(updateUserSuccess(actualData));
     } catch (error) {
       console.log(error.message);
-      if (error.message === 'Error status - 403') {
-        dispatch(getTokenRequest()).then(()=> dispatch(updateUserRequest(form)))
+      if (error.message === "Error status - 403") {
+        dispatch(getTokenRequest()).then(() =>
+          dispatch(updateUserRequest(form))
+        );
       }
       dispatch(updateUserFailed(error.message));
     }

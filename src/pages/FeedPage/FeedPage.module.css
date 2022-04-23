@@ -1,0 +1,58 @@
+.feedPage__main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr;
+    justify-content: space-between;
+    width: 100%;
+    justify-items: stretch;
+    column-gap: 60px;
+    max-width: 1240px;
+    margin: 0 auto;
+}
+
+.feedPage__title {
+    margin: 40px 0 20px;
+    grid-column: 1/-1;
+}
+
+.feedPage__feeds {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-height: 80vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.feedPage__orderInfo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(3, auto);
+    justify-items: stretch;
+    row-gap: 60px;
+}
+
+.feedPage__list {
+    margin: 0;
+    list-style-type: none;
+    padding: 0;
+    max-height: 200px;
+    flex-wrap: wrap;
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    overflow: hidden;
+    column-gap: 15px;
+}
+
+.feedPage__color {
+    color: #00CCCC;
+}
+
+.feedPage__totalDone {
+    grid-column: span 2;
+}
+
+.feedPage__todayDone {
+    grid-column: span 2;
+}

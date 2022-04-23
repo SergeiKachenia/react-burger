@@ -5,11 +5,11 @@ import { useSelector } from "react-redux";
 import { ingredientsSelector } from "../../services/slice/ingredients";
 
 export const HomePage = () => {
-  const { loading, error } = useSelector(ingredientsSelector);
+  const {error } = useSelector(ingredientsSelector);
 
   return (
     <main className={`${HomeStyles.main}`}>
-      {!error && !loading && (
+      {!error && (
         <>
           <BurgerIngredients />
           <BurgerConstructor />

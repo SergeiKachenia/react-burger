@@ -3,8 +3,6 @@ import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import IngredientsStyles from "./BurgerIngredients.module.css";
 import { AppPropsItem } from "../../utils/types";
 import BurgerIngredient from "../BurgerIngredient/BurgerIngredient";
-import Modal from "../Modal/Modal";
-import IngredientDetails from "../IngredientDetails/IngredientDetails";
 import {
   ingredientsSelector,
   removeIngredientDetails,
@@ -13,7 +11,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 function BurgerIngredients() {
   const dispatch = useDispatch();
-  const { ingredients, activeIngredientDetailsModal, ingredientDetails } =
+  const { ingredients} =
     useSelector(ingredientsSelector);
   const [current, setCurrent] = React.useState("bun");
   const bunRef = useRef(null);

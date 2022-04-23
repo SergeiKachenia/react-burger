@@ -1,0 +1,24 @@
+.imagesList__img {
+    background: #131316;
+    border-radius: 100px;
+    height: 63px;
+    width: 63px;
+    object-fit: cover;
+    margin-left: -20px;
+    border: 2px solid rgb(76, 76, 255);
+}
+
+.imagesList__lastImg {
+    background: #1C1C21;
+    opacity: 0.6;
+}
+
+.imagesList__lastImages {
+    position: relative;
+}
+
+.imagesList__counter {
+    position: absolute;
+    bottom: 26px;
+    left: 1px;
+}

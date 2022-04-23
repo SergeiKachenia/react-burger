@@ -1,6 +1,7 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { createSlice} from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from 'uuid';
 import {baseUrl, checkResponse} from '../../utils/utils'
+import {getCookie} from '../../utils/cookies'
 export const initialState = {
   ingredients: [],
   loading: false,
@@ -70,7 +71,7 @@ const ingredientsSlice = createSlice({
     removeIngredientFromCart: (state) => {
     state.cartIngredients = [];
     },
-    sendOrder: (state) => {
+    sendOrderInProgress: (state) => {
       state.loading = true;
     },
     sendOrderSuccess: (state, { payload }) => {
@@ -125,7 +126,7 @@ export const {
   removeIngredientDetails,
   addIngredientToCart,
   deleteIngredientFromCart,
-  sendOrder,
+  sendOrderInProgress,
   sendOrderSuccess,
   sendOrderFail,
   closeOrderModal,
@@ -155,11 +156,13 @@ export const fetchIngredients = () => {
 export const sendOrderInfo = (ingredients) => {
   return async (dispatch) => {
     // @ts-ignore
-    dispatch(sendOrder());
+    dispatch(sendOrderInProgress());
+    console.log(initialState.loading)
     try {
       const res = await fetch(`${baseUrl}/orders`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json",
+        "authorization": getCookie('accessToken') },
         body: JSON.stringify({ ingredients: ingredients.map((i) => i._id) }),
       });
       checkResponse(res);

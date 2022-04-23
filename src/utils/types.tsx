@@ -1,5 +1,4 @@
-import PropTypes from 'prop-types';
-
+import PropTypes from "prop-types";
 
 export const burgerIngredientsPropTypes = PropTypes.shape({
   _id: PropTypes.string.isRequired,
@@ -16,23 +15,22 @@ export const burgerIngredientsPropTypes = PropTypes.shape({
   __v: PropTypes.number,
 }).isRequired;
 
-
 export type AppProps = {
-item: {
-  _id: string;
-  name: string;
-  type: string;
-  proteins: number;
-  fat: number;
-  carbohydrates: number;
-  calories: number;
-  price: number;
-  image: string;
-  image_mobile: string;
-  image_large: string;
-  __v: number;
-}
+  item: {
+    _id: string;
+    name: string;
+    type: string;
+    proteins: number;
+    fat: number;
+    carbohydrates: number;
+    calories: number;
+    price: number;
+    image: string;
+    image_mobile: string;
+    image_large: string;
+    __v: number;
   };
+};
 export type AppPropsItem = {
   _id: string;
   name: string;
@@ -46,9 +44,9 @@ export type AppPropsItem = {
   image_mobile: string;
   image_large: string;
   __v: number;
-}
+};
 
 export type orderDetails = {
   name: string;
   number: number;
-}
+};

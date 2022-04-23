@@ -1,0 +1,23 @@
+.ordersPage__list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-height: 80vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 100%;
+    margin: 40px auto 0;
+}
+
+.ordersPage__main {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 1240px;
+    margin: 0 auto;
+}
+
+.orderPage__nav {
+    margin-top: 120px;
+    padding: 0;
+}
