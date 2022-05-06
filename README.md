@@ -6,6 +6,7 @@
 * TypeScript
 * React library
 * Redux + RTK
+* REST API
 * DnD library
 * WebSocket
 
