@@ -1,5 +1,5 @@
 ### Project: Stellar Burgers
-*GitHub Pages link - https://SergeiKachenia.github.io/react-burger/
+### [GitHub Pages link](https://SergeiKachenia.github.io/react-burger/)
 
 ### Tech stack
 
