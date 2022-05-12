@@ -1,5 +1,5 @@
 import { Redirect, Link, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent, FC } from "react";
 import LPStyles from "./LoginPage.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -14,18 +14,20 @@ import {
   resetForgotPassReqSuccess,
   resetResetPassReqSuccess,
 } from "../../services/slice/authorisation";
+import { IUserLogin } from "../../services/types/data";
+import { TLocationState } from "../../services/types/data";
 
-export const LoginPage = () => {
-  const [formData, addFormData] = useState({
+export const LoginPage: FC = () => {
+  const [formData, addFormData] = useState<IUserLogin>({
     email: "",
     password: "",
   });
 
   const { error, auth } = useSelector(authSelector);
-  const location = useLocation();
+  const location = useLocation<TLocationState>();
   const dispatch = useDispatch();
 
-  const changeFormData = (e) => {
+  const changeFormData = (e: { target: { name: string; value: string } }) => {
     addFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -38,7 +40,7 @@ export const LoginPage = () => {
     dispatch(resetForgotPassReqSuccess());
   }, []);
 
-  const sendLoginForm = (e) => {
+  const sendLoginForm = (e: FormEvent) => {
     e.preventDefault();
     // @ts-ignore
     dispatch(loginRequest(formData));

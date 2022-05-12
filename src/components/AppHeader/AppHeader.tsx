@@ -1,4 +1,4 @@
-import React from "react";
+import { FC } from "react";
 import {
   Logo,
   BurgerIcon,
@@ -8,7 +8,7 @@ import {
 import AppHeaderStyles from "./AppHeader.module.css";
 import { NavLink, Link, useLocation } from "react-router-dom";
 
-function AppHeader() {
+const AppHeader: FC = () => {
   const location = useLocation();
   return (
     <header className={`${AppHeaderStyles.header} pt-4 pb-4`}>
@@ -82,6 +82,6 @@ function AppHeader() {
       </div>
     </header>
   );
-}
+};
 
 export default AppHeader;

@@ -1,6 +1,9 @@
 import ILStyles from "./ImagesList.module.css";
+import { FC } from "react";
 
-export const ImagesList = ({ ingredientsImages }) => {
+export const ImagesList: FC<{ ingredientsImages: string[] }> = ({
+  ingredientsImages,
+}) => {
   return (
     <>
       {ingredientsImages.slice(0, 6).map((item, i) => {

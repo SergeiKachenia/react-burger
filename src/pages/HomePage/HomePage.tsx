@@ -3,9 +3,9 @@ import BurgerIngredients from "../../components/BurgerIngredients/BurgerIngredie
 import BurgerConstructor from "../../components/BurgerConstructor/BurgerConstructor";
 import { useSelector } from "react-redux";
 import { ingredientsSelector } from "../../services/slice/ingredients";
-
-export const HomePage = () => {
-  const {error } = useSelector(ingredientsSelector);
+import { FC } from "react";
+export const HomePage: FC = () => {
+  const { error } = useSelector(ingredientsSelector);
 
   return (
     <main className={`${HomeStyles.main}`}>

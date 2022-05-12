@@ -1,8 +1,8 @@
 import { actions } from "../slice/websocket";
-
-export const wsMiddleware = (wsActions: typeof actions) => {
+import {Middleware} from "redux";
+export const wsMiddleware = (wsActions: typeof actions): Middleware => {
   return (store) => {
-    let socket = null;
+    let socket: WebSocket | null = null;
 
     return (next) => (action) => {
       const { dispatch } = store;

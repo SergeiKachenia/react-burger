@@ -1,18 +1,22 @@
-import React from "react";
+import React, { FC } from "react";
 import IngredientStyles from "./BurgerIngredient.module.css";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import PropTypes from "prop-types";
 import { useDrag } from "react-dnd";
 import { useDispatch } from "react-redux";
 import { showIngredientDetails } from "../../services/slice/ingredients";
 import { Link, useLocation } from "react-router-dom";
-function BurgerIngredient({ item }) {
+import { TIngredient } from "../../services/types/data";
+import { TLocationState } from "../../services/types/data";
+type TIngredientProps = {
+  readonly item: TIngredient;
+};
+const BurgerIngredient: FC<TIngredientProps> = ({ item }) => {
   const dispatch = useDispatch();
   const [, dragRef] = useDrag({
     type: "ingredient",
     item,
   });
-  const location = useLocation();
+  const location = useLocation<TLocationState>();
   return (
     <ul
       onClick={() => {
@@ -46,15 +50,6 @@ function BurgerIngredient({ item }) {
       </li>
     </ul>
   );
-}
+};
 
 export default BurgerIngredient;
-
-BurgerIngredient.propTypes = {
-  item: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-  }),
-  handler: PropTypes.any,
-};

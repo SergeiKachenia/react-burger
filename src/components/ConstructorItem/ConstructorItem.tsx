@@ -3,20 +3,23 @@ import {
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import CIstyles from "./ConstructorItem.module.css";
-import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import {
   deleteIngredientFromCart,
   dragIngredients,
 } from "../../services/slice/ingredients";
 import { useDrag, useDrop } from "react-dnd";
-import { useRef } from "react";
+import { useRef, FC } from "react";
+import { TIngredient } from "../../services/types/data";
 
-const ConstructorItem = ({ item, index }) => {
+interface IConstructorItemProps {
+  item: TIngredient;
+  type?: "top" | "bottom";
+  index: number;
+}
+
+const ConstructorItem: FC<IConstructorItemProps> = ({ item, index }) => {
   const dispatch = useDispatch();
-
-  // Нужно найти какое-то читаемое решение по sortable list
-
   const ref = useRef(null);
 
   const [{ isDragging }, drag] = useDrag({
@@ -81,11 +84,6 @@ const ConstructorItem = ({ item, index }) => {
       />
     </li>
   );
-};
-
-ConstructorItem.propTypes = {
-  index: PropTypes.number,
-  item: PropTypes.object,
 };
 
 export default ConstructorItem;

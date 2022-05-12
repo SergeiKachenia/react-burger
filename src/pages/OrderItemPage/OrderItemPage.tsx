@@ -4,8 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ingredientsSelector } from "../../services/slice/ingredients";
 import { useParams } from "react-router-dom";
 import { getStatus, getDate } from "../../utils/utils";
-import { useEffect, useMemo } from "react";
-import { authSelector } from "../../services/slice/authorisation";
+import { useEffect, useMemo, FC } from "react";
 import { wsSelector } from "../../services/slice/websocket";
 import { useWebSocket } from "../../hooks/wsHook";
 import { getCookie } from "../../utils/cookies";
@@ -13,46 +12,48 @@ import {
   getTokenRequest,
   getUserRequest,
 } from "../../services/slice/authorisation";
+import { useAppSelector } from "../../index";
+import { TOrder, IOrderIngredient } from "../../services/types/data";
 
-export const OrderItemPage = () => {
+export const OrderItemPage: FC = () => {
   useWebSocket();
   const dispatch = useDispatch();
-  const { ingredients } = useSelector(ingredientsSelector);
-  const { auth } = useSelector(authSelector);
+  const { ingredients } = useAppSelector(ingredientsSelector);
+
   useEffect(() => {
     if (
       getCookie("refreshToken") != null &&
       getCookie("accessToken") === null
     ) {
       // @ts-ignore
-      dispatch(getTokenRequest()).then(() => getUserRequest())
+      dispatch(getTokenRequest()).then(() => getUserRequest());
     }
   }, []);
   //@ts-ignore
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
+  const { feedOrders } = useAppSelector(wsSelector);
 
-  const { feedOrders } = useSelector(wsSelector);
-
-  const orders = (feedOrders) =>
+  const orders = (feedOrders: TOrder[]) =>
     feedOrders ? feedOrders.find((item) => item._id === id) : null;
   const order = orders(feedOrders);
 
-  function useOrderIngredients(order) {
+  function useOrderIngredients(order: TOrder | undefined) {
     const { newIngredients, total } = useMemo(() => {
       if (order) {
-        return order.ingredients.reduce(
+        return order.ingredients.reduce<{
+          newIngredients: IOrderIngredient[];
+          total: any;
+        }>(
           (acc, orderIngredient) => {
             const newIngredient = acc.newIngredients.find(
-              (item) => item.ingredient._id === orderIngredient
+              (item: any) => item.ingredient._id === orderIngredient
             );
             if (!newIngredient) {
-              // @ts-ignore
               const ingredient = ingredients.find(
-                (item) => item._id === orderIngredient
+                (item: any) => item._id === orderIngredient
               );
               if (ingredient) {
                 acc.newIngredients.push({ ingredient, count: 1 });
-                // @ts-ignore
                 acc.total += ingredient.price;
               }
             } else {

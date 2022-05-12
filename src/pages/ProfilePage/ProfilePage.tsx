@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import PPStyles from "./ProfilePage.module.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   Button,
   Input,
@@ -12,22 +12,26 @@ import {
   updateUserRequest,
 } from "../../services/slice/authorisation";
 import { ProfileNavigation } from "../../components/ProfileNavigation/ProfileNavigation";
-export const ProfilePage = () => {
-  const { error, userData } = useSelector(authSelector);
-  const [formData, addFormData] = useState({
+import { useAppSelector } from "../../index";
+import { IUserRegistration } from "../../services/types/data";
+import { FC, FormEvent } from "react";
+
+export const ProfilePage: FC = () => {
+  const { error, userData } = useAppSelector(authSelector);
+  const [formData, addFormData] = useState<IUserRegistration>({
     email: "",
     password: "",
     name: "",
   });
   const dispatch = useDispatch();
-  const changeFormData = (e) => {
+  const changeFormData = (e: { target: { name: string; value: string } }) => {
     addFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
 
-  const resetUserInfo = (e) => {
+  const resetUserInfo = (e: FormEvent) => {
     e.preventDefault();
     addFormData({
       name: userData.name,
@@ -36,9 +40,8 @@ export const ProfilePage = () => {
     });
   };
 
-  const updateUserInfo = (e) => {
+  const updateUserInfo = (e: FormEvent) => {
     e.preventDefault();
-    // @ts-ignore
     dispatch(updateUserRequest(formData));
   };
 

@@ -1,14 +1,13 @@
 import IDStyles from "./IngredientDetails.module.css";
-import PropTypes from "prop-types";
+import { FC } from "react";
 import { useParams } from "react-router-dom";
 import { ingredientsSelector } from "../../services/slice/ingredients";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../index";
 
-export const IngredientDetails = () => {
-  const { ingredients } = useSelector(ingredientsSelector);
+export const IngredientDetails: FC = () => {
+  const { ingredients } = useAppSelector(ingredientsSelector);
   //@ts-ignore
-  const { id } = useParams();
-  console.log(id);
+  const { id } = useParams<{ id: string }>();
   const currentIngredient = ingredients.find((item) => item._id === id);
   return (
     <>

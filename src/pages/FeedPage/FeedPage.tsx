@@ -1,19 +1,19 @@
-import React from "react";
+import { FC } from "react";
 import FPStyles from "./FeedPage.module.css";
 import { OrdersList } from "../../components/OrdersList/OrdersList";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../index";
 import { nanoid } from "@reduxjs/toolkit";
 import { wsSelector } from "../../services/slice/websocket";
 import { useWebSocket } from "../../hooks/wsHook";
 
-export const FeedPage = () => {
+export const FeedPage: FC = () => {
   const { feedOrders, wsConnected, total, totalToday } =
-    useSelector(wsSelector);
+    useAppSelector(wsSelector);
 
   useWebSocket();
   console.log(wsConnected);
 
-  const filterStatus = (status) => {
+  const filterStatus = (status: string) => {
     return feedOrders.filter((item) => item.status === status);
   };
   return (

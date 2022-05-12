@@ -1,19 +1,14 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, FC, SetStateAction, MutableRefObject } from "react";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import IngredientsStyles from "./BurgerIngredients.module.css";
-import { AppPropsItem } from "../../utils/types";
 import BurgerIngredient from "../BurgerIngredient/BurgerIngredient";
-import {
-  ingredientsSelector,
-  removeIngredientDetails,
-} from "../../services/slice/ingredients";
-import { useSelector, useDispatch } from "react-redux";
-
-function BurgerIngredients() {
-  const dispatch = useDispatch();
-  const { ingredients} =
-    useSelector(ingredientsSelector);
-  const [current, setCurrent] = React.useState("bun");
+import { ingredientsSelector } from "../../services/slice/ingredients";
+import { TIngredient } from "../../services/types/data";
+import { useAppSelector } from "../../index";
+import { useSelector } from "react-redux";
+const BurgerIngredients: FC = () => {
+  const { ingredients } = useSelector(ingredientsSelector);
+  const [current, setCurrent] = React.useState<string>("bun");
   const bunRef = useRef(null);
   const sauceRef = useRef(null);
   const mainRef = useRef(null);
@@ -23,7 +18,10 @@ function BurgerIngredients() {
   const ingredientsSauce = ingredients.filter((i) => i.type === "sauce");
   const ingredientsMain = ingredients.filter((i) => i.type === "main");
 
-  const clickTab = (e: any, ref: any) => {
+  const clickTab = (
+    e: SetStateAction<string>,
+    ref: MutableRefObject<HTMLDivElement>
+  ) => {
     setCurrent(e);
     ref.current.scrollIntoView({ behavior: "smooth" });
   };
@@ -59,21 +57,21 @@ function BurgerIngredients() {
           <Tab
             value="bun"
             active={current === "bun"}
-            onClick={(e) => clickTab(e, bunRef)}
+            onClick={(e: string) => clickTab(e, bunRef)}
           >
             Булки
           </Tab>
           <Tab
             value="sauce"
             active={current === "sauce"}
-            onClick={(e) => clickTab(e, sauceRef)}
+            onClick={(e: string) => clickTab(e, sauceRef)}
           >
             Соусы
           </Tab>
           <Tab
             value="main"
             active={current === "main"}
-            onClick={(e) => clickTab(e, mainRef)}
+            onClick={(e: string) => clickTab(e, mainRef)}
           >
             Начинки
           </Tab>
@@ -87,7 +85,7 @@ function BurgerIngredients() {
           <section id={"bun"} ref={bunRef}>
             <h2 className={"text text_type_main-medium"}>Булки</h2>
             <ul className={IngredientsStyles.ingredients__list}>
-              {ingredientsBun.map((item: AppPropsItem) => (
+              {ingredientsBun.map((item: TIngredient) => (
                 <li key={item._id}>
                   <BurgerIngredient item={item} />
                 </li>
@@ -97,7 +95,7 @@ function BurgerIngredients() {
           <section id={"sauce"} ref={sauceRef}>
             <h2 className={"text text_type_main-medium"}>Соусы</h2>
             <ul className={IngredientsStyles.ingredients__list}>
-              {ingredientsSauce.map((item: AppPropsItem) => (
+              {ingredientsSauce.map((item: TIngredient) => (
                 <li key={item._id}>
                   <BurgerIngredient item={item} />
                 </li>
@@ -107,7 +105,7 @@ function BurgerIngredients() {
           <section id={"main"} ref={mainRef}>
             <h2 className={"text text_type_main-medium"}>Начинки</h2>
             <ul className={IngredientsStyles.ingredients__list}>
-              {ingredientsMain.map((item: AppPropsItem) => (
+              {ingredientsMain.map((item: TIngredient) => (
                 <li key={item._id}>
                   <BurgerIngredient item={item} />
                 </li>
@@ -118,6 +116,6 @@ function BurgerIngredients() {
       </section>
     )
   );
-}
+};
 
 export default BurgerIngredients;
