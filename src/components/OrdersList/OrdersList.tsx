@@ -7,7 +7,7 @@ import { ingredientsSelector } from "../../services/slice/ingredients";
 import { Link, useLocation } from "react-router-dom";
 import { FC } from "react";
 import { TOrder } from "../../services/types/data";
-import { TLocationState } from "../../services/types/data";
+import { TLocationState} from "../../services/types/data";
 interface IOrdersListProps {
   order: TOrder;
   idIngredients: string[];
@@ -17,20 +17,21 @@ interface IOrdersListProps {
 export const OrdersList: FC<IOrdersListProps> = ({
   order,
   idIngredients,
-  page,
+  page
 }) => {
+
   const location = useLocation<TLocationState>();
   const { ingredients } = useAppSelector(ingredientsSelector);
+  console.log(idIngredients)
+
   const searchIngredient = (value: string) => {
-    // @ts-ignore
     return ingredients.filter((ingredient) => ingredient._id === value);
   };
   const searchIngredientsImages = (id: string[]) => {
     return id.map((item: string) => {
       const imagesList = searchIngredient(item);
-      // @ts-ignore
+      console.log(imagesList)
       if (imagesList.length) {
-        // @ts-ignore
         return imagesList[0].image;
       }
     });
@@ -39,9 +40,8 @@ export const OrdersList: FC<IOrdersListProps> = ({
   const searchIngredientsPrice = (id: string[]) => {
     return id.map((item: string) => {
       const priceList = searchIngredient(item);
-      // @ts-ignore
+      console.log(priceList)
       if (priceList.length) {
-        // @ts-ignore
         return priceList[0].price;
       }
     });
@@ -50,7 +50,7 @@ export const OrdersList: FC<IOrdersListProps> = ({
     (acc: number, price: number) => acc + price,
     0
   );
-
+console.log(price)
   return (
     <>
       <Link

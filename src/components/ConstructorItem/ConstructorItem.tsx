@@ -3,7 +3,7 @@ import {
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import CIstyles from "./ConstructorItem.module.css";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "../../index";
 import {
   deleteIngredientFromCart,
   dragIngredients,
@@ -19,7 +19,7 @@ interface IConstructorItemProps {
 }
 
 const ConstructorItem: FC<IConstructorItemProps> = ({ item, index }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const ref = useRef(null);
 
   const [{ isDragging }, drag] = useDrag({

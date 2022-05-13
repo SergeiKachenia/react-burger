@@ -1,13 +1,13 @@
 import PNStyles from "./ProfileNavigation.module.css";
 import { Redirect, NavLink, useLocation } from "react-router-dom";
 import { logoutRequest } from "../../services/slice/authorisation";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "../../index";
 import { FC } from "react";
 import { TLocationState } from "../../services/types/data";
 
 export const ProfileNavigation: FC = () => {
   const location = useLocation<TLocationState>();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const logout = () => {
     if (location.pathname === "/login") {
       dispatch(logoutRequest());

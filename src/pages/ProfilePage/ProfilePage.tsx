@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import PPStyles from "./ProfilePage.module.css";
-import { useDispatch } from "react-redux";
 import {
   Button,
   Input,
@@ -12,7 +11,7 @@ import {
   updateUserRequest,
 } from "../../services/slice/authorisation";
 import { ProfileNavigation } from "../../components/ProfileNavigation/ProfileNavigation";
-import { useAppSelector } from "../../index";
+import { useAppSelector, useAppDispatch } from "../../index";
 import { IUserRegistration } from "../../services/types/data";
 import { FC, FormEvent } from "react";
 
@@ -23,7 +22,7 @@ export const ProfilePage: FC = () => {
     password: "",
     name: "",
   });
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const changeFormData = (e: { target: { name: string; value: string } }) => {
     addFormData({
       ...formData,

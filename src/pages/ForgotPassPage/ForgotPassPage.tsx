@@ -1,7 +1,6 @@
 import { Redirect, Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import FPPStyles from "./ForgotPassPage.module.css";
-import { useDispatch } from "react-redux";
 import {
   Button,
   Input,
@@ -11,7 +10,7 @@ import {
   authSelector,
   resetError,
 } from "../../services/slice/authorisation";
-import { useAppSelector } from "../../index";
+import { useAppSelector, useAppDispatch } from "../../index";
 import { FC, FormEvent } from "react";
 import { IForgotPassword } from "../../services/types/data";
 import { TLocationState } from "../../services/types/data";
@@ -21,7 +20,7 @@ export const ForgotPassPage: FC = () => {
     email: "",
   });
   const location = useLocation<TLocationState>();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { forgotPassReqSuccess, auth } = useAppSelector(authSelector);
 
   const sendForgotPassForm = (e: FormEvent) => {

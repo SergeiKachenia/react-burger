@@ -23,12 +23,12 @@ export const OrdersPage: FC = () => {
         </div>
         <section className={`${OPStyles.ordersPage__list} custom-scroll`}>
           {reversedFeedOrders &&
-            reversedFeedOrders.map((item: any) => (
+            reversedFeedOrders.map((item: TOrder) => (
               // @ts-ignore
               <OrdersList
                 key={item._id}
                 order={item}
-                idIngredients={item.ingredients}
+                idIngredients={[item._id]}
                 page={page}
               />
             ))}

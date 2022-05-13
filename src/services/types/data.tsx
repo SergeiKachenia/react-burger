@@ -16,6 +16,18 @@ export type TIngredient = {
   readonly __v: number;
 };
 
+export type TOrder =  {
+  readonly order: {
+    readonly ingredients: TIngredient[];
+    readonly number: number;
+  };
+  readonly number: number;
+  readonly name: string;
+  readonly status: string;
+  readonly createdAt: string;
+  readonly ingredients: TIngredient[];
+  readonly _id: string;
+};
 export interface IUserRegistration {
   name: string;
   email: string;
@@ -39,18 +51,7 @@ export interface IOrderIngredient {
   count: number;
 }
 
-export type TOrder = {
-  readonly order: {
-    readonly ingredients: TIngredient[];
-    readonly number: number;
-  };
-  readonly number: number;
-  readonly name: string;
-  readonly status: string;
-  readonly createdAt: string;
-  readonly ingredients: TIngredient[];
-  readonly _id: string;
-};
+
 
 export type TLocationState = {
   background?: Location<TLocationState>;

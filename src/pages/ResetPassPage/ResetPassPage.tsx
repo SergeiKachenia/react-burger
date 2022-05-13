@@ -1,7 +1,6 @@
 import { Redirect, Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import RPPStyles from "./ResetPassPage.module.css";
-import { useDispatch } from "react-redux";
 import {
   Button,
   Input,
@@ -12,7 +11,7 @@ import {
   resetPassRequest,
   authSelector,
 } from "../../services/slice/authorisation";
-import { useAppSelector } from "../../index";
+import { useAppSelector, useAppDispatch } from "../../index";
 import { IResetPassword, TLocationState } from "../../services/types/data";
 import { FC, FormEvent } from "react";
 
@@ -22,7 +21,7 @@ export const ResetPassPage: FC = () => {
     token: "",
   });
   const location = useLocation<TLocationState>();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { resetPassReqSuccess, error, auth, forgotPassReqSuccess } =
     useAppSelector(authSelector);
 

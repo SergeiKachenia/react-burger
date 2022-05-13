@@ -1,7 +1,7 @@
 import { Redirect, Link, useLocation } from "react-router-dom";
 import { useState, useEffect, FormEvent, FC } from "react";
 import LPStyles from "./LoginPage.module.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppSelector, useAppDispatch } from "../../index";
 import {
   Button,
   Input,
@@ -23,9 +23,9 @@ export const LoginPage: FC = () => {
     password: "",
   });
 
-  const { error, auth } = useSelector(authSelector);
+  const { error, auth } = useAppSelector(authSelector);
   const location = useLocation<TLocationState>();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const changeFormData = (e: { target: { name: string; value: string } }) => {
     addFormData({

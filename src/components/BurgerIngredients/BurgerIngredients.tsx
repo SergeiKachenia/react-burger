@@ -7,7 +7,7 @@ import { TIngredient } from "../../services/types/data";
 import { useAppSelector } from "../../index";
 import { useSelector } from "react-redux";
 const BurgerIngredients: FC = () => {
-  const { ingredients } = useSelector(ingredientsSelector);
+  const { ingredients } = useAppSelector(ingredientsSelector);
   const [current, setCurrent] = React.useState<string>("bun");
   const bunRef = useRef(null);
   const sauceRef = useRef(null);

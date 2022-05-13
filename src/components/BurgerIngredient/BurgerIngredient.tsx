@@ -2,16 +2,17 @@ import React, { FC } from "react";
 import IngredientStyles from "./BurgerIngredient.module.css";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useDrag } from "react-dnd";
-import { useDispatch } from "react-redux";
+import {  useAppDispatch } from "../../index";
 import { showIngredientDetails } from "../../services/slice/ingredients";
 import { Link, useLocation } from "react-router-dom";
 import { TIngredient } from "../../services/types/data";
 import { TLocationState } from "../../services/types/data";
+
 type TIngredientProps = {
   readonly item: TIngredient;
 };
 const BurgerIngredient: FC<TIngredientProps> = ({ item }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [, dragRef] = useDrag({
     type: "ingredient",
     item,

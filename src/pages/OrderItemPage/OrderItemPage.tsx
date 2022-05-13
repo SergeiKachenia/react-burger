@@ -1,6 +1,5 @@
 import OIPStyles from "./OrderItemPage.module.css";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useDispatch, useSelector } from "react-redux";
 import { ingredientsSelector } from "../../services/slice/ingredients";
 import { useParams } from "react-router-dom";
 import { getStatus, getDate } from "../../utils/utils";
@@ -12,12 +11,12 @@ import {
   getTokenRequest,
   getUserRequest,
 } from "../../services/slice/authorisation";
-import { useAppSelector } from "../../index";
+import { useAppSelector, useAppDispatch } from "../../index";
 import { TOrder, IOrderIngredient } from "../../services/types/data";
 
 export const OrderItemPage: FC = () => {
   useWebSocket();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { ingredients } = useAppSelector(ingredientsSelector);
 
   useEffect(() => {

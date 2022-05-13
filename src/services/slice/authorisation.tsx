@@ -8,7 +8,7 @@ import {
   IForgotPassword,
   IResetPassword,
 } from "../types/data";
-import { TRootState } from "../index";
+import { RootState } from "../../index";
 
 type TUserData = {
   email: string;
@@ -46,23 +46,23 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    checkAuth: (state: IAuthState) => {
+    checkAuth: (state) => {
       getCookie("refreshToken") ? getUserRequest() : (state.auth = false);
     },
-    resetError: (state: IAuthState) => {
+    resetError: (state) => {
       state.error = "";
     },
-    resetForgotPassReqSuccess: (state: IAuthState) => {
+    resetForgotPassReqSuccess: (state) => {
       state.forgotPassReqSuccess = false;
     },
-    resetResetPassReqSuccess: (state: IAuthState) => {
+    resetResetPassReqSuccess: (state) => {
       state.resetPassReqSuccess = false;
     },
-    registerInProgress: (state: IAuthState) => {
+    registerInProgress: (state) => {
       state.loading = true;
     },
     registerSuccess: (
-      state: IAuthState,
+      state,
       {
         payload,
       }: PayloadAction<{
@@ -79,37 +79,37 @@ const authSlice = createSlice({
       setCookie("accessToken", payload.accessToken, {});
       setCookie("refreshToken", payload.refreshToken, {});
     },
-    registerFailed: (state: IAuthState, { payload }: PayloadAction<any>) => {
+    registerFailed: (state, { payload }: PayloadAction<any>) => {
       state.loading = false;
       state.error = `Зарегистрироваться не удалось: ${payload}`;
     },
-    forgotPassInProgress: (state: IAuthState) => {
+    forgotPassInProgress: (state) => {
       state.loading = true;
     },
-    forgotPassSuccess: (state: IAuthState, { payload }: PayloadAction<any>) => {
+    forgotPassSuccess: (state, { payload }: PayloadAction<any>) => {
       state.loading = false;
       state.forgotPassReqSuccess = true;
     },
-    forgotPassFailed: (state: IAuthState, { payload }: PayloadAction<any>) => {
+    forgotPassFailed: (state, { payload }: PayloadAction<any>) => {
       state.loading = false;
       state.error = `Код отправить не удалось. Проблема: ${payload}`;
     },
-    resetPassInProgress: (state: IAuthState) => {
+    resetPassInProgress: (state) => {
       state.loading = true;
     },
-    resetPassSuccess: (state: IAuthState, { payload }: PayloadAction<any>) => {
+    resetPassSuccess: (state, { payload }: PayloadAction<any>) => {
       state.loading = false;
       state.resetPassReqSuccess = true;
     },
-    resetPassFailed: (state: IAuthState, { payload }: PayloadAction<any>) => {
+    resetPassFailed: (state, { payload }: PayloadAction<any>) => {
       state.loading = false;
       state.error = `Ваш пароль изменить не удалось. Проблема: ${payload}`;
     },
-    loginInProgress: (state: IAuthState) => {
+    loginInProgress: (state) => {
       state.loading = true;
     },
     loginSuccess: (
-      state: IAuthState,
+      state,
       {
         payload,
       }: PayloadAction<{
@@ -126,14 +126,14 @@ const authSlice = createSlice({
       setCookie("accessToken", payload.accessToken, { expires: 20 * 60 });
       setCookie("refreshToken", payload.refreshToken, {});
     },
-    loginFailed: (state: IAuthState, { payload }: PayloadAction<any>) => {
+    loginFailed: (state, { payload }: PayloadAction<any>) => {
       state.loading = false;
       state.error = `В аккаунт войти не удалось. Проблема: ${payload}`;
     },
-    logoutInProgress: (state: IAuthState) => {
+    logoutInProgress: (state) => {
       state.loading = true;
     },
-    logoutSuccess: (state: IAuthState) => {
+    logoutSuccess: (state) => {
       state.loading = false;
       state.auth = false;
       state.userData.name = "";
@@ -142,7 +142,7 @@ const authSlice = createSlice({
       deleteCookie("accessToken");
       deleteCookie("refreshToken");
     },
-    logoutFailed: (state: IAuthState, { payload }: PayloadAction<any>) => {
+    logoutFailed: (state, { payload }: PayloadAction<any>) => {
       state.loading = false;
       state.error = `Не удалось выйти из аккаунта. Проблема: ${payload}`;
     },
@@ -150,7 +150,7 @@ const authSlice = createSlice({
       state.loading = true;
     },
     getUserSuccess: (
-      state: IAuthState,
+      state,
       { payload }: PayloadAction<{ user: { name: string; email: string } }>
     ) => {
       state.userData.name = payload.user.name;
@@ -158,7 +158,7 @@ const authSlice = createSlice({
       state.userData.password = "";
       state.auth = true;
     },
-    getUserFailed: (state: IAuthState, { payload }: PayloadAction<any>) => {
+    getUserFailed: (state, { payload }: PayloadAction<any>) => {
       state.userData.name = "";
       state.userData.email = "";
       state.userData.password = "";
@@ -166,7 +166,7 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = `Данные пользователя получить не удалось. Проблема: ${payload}`;
     },
-    updateUserInProgress: (state: IAuthState) => {
+    updateUserInProgress: (state) => {
       state.loading = true;
     },
     updateUserSuccess: (
@@ -178,7 +178,7 @@ const authSlice = createSlice({
       state.userData.password = "";
       state.auth = true;
     },
-    updateUserFailed: (state: IAuthState, { payload }: PayloadAction<any>) => {
+    updateUserFailed: (state, { payload }: PayloadAction<any>) => {
       state.userData.name = "";
       state.userData.email = "";
       state.userData.password = "";
@@ -186,7 +186,7 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = `Данные пользователя обновить не удалось. Проблема: ${payload}`;
     },
-    getTokenInProgress: (state: IAuthState) => {
+    getTokenInProgress: (state) => {
       state.loading = true;
     },
     getTokenSuccess: (
@@ -197,7 +197,7 @@ const authSlice = createSlice({
       setCookie("refreshToken", payload.refreshToken, {});
       state.auth = true;
     },
-    getTokenFailed: (state: IAuthState, { payload }: PayloadAction<any>) => {
+    getTokenFailed: (state, { payload }: PayloadAction<any>) => {
       state.auth = false;
       state.loading = false;
       state.error = `Проблема: ${payload}`;
@@ -236,7 +236,7 @@ export const {
   getTokenFailed,
 } = authSlice.actions;
 
-export const authSelector = (state: TRootState) => state.auth;
+export const authSelector = (state: RootState) => state.auth;
 export const authReducer = authSlice.reducer;
 
 export const registerRequest = (form: IUserRegistration) => {

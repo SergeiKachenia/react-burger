@@ -6,7 +6,7 @@ import {
 import ConstructorStyles from "./BurgerConstructor.module.css";
 import Modal from "../Modal/Modal";
 import OrderDetails from "../OrderDetails/OrderDetails";
-import { useSelector, useDispatch } from "react-redux";
+import { useAppSelector, useAppDispatch } from "../../index";
 import { useDrop } from "react-dnd";
 import {
   ingredientsSelector,
@@ -23,11 +23,11 @@ import { useHistory } from "react-router-dom";
 import { TIngredient } from "../../services/types/data";
 
 const BurgerConstructor: FC = () => {
-  const { auth } = useSelector(authSelector);
-  const dispatch = useDispatch();
+  const { auth } = useAppSelector(authSelector);
+  const dispatch = useAppDispatch();
   const history = useHistory();
   const { totalSum, cartIngredients, orderModal, loading } =
-    useSelector(ingredientsSelector);
+    useAppSelector(ingredientsSelector);
 
   const bun = cartIngredients.find((item) => item.type === "bun");
   const other = cartIngredients.filter((item) => item.type !== "bun");

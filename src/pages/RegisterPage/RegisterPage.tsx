@@ -1,7 +1,6 @@
 import { Redirect, Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import RPStyles from "./RegisterPage.module.css";
-import { useDispatch } from "react-redux";
 import {
   Button,
   Input,
@@ -12,7 +11,7 @@ import {
   authSelector,
   resetError,
 } from "../../services/slice/authorisation";
-import { useAppSelector } from "../../index";
+import { useAppSelector, useAppDispatch } from "../../index";
 import { IUserRegistration } from "../../services/types/data";
 import { FC, FormEvent } from "react";
 import { TLocationState } from "../../services/types/data";
@@ -25,7 +24,7 @@ export const RegisterPage: FC = () => {
   });
 
   const location = useLocation<TLocationState>();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { error, auth } = useAppSelector(authSelector);
 
   const changeFormData = (e: { target: { name: string; value: string } }) => {

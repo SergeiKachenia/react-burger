@@ -7,9 +7,10 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import AppHeaderStyles from "./AppHeader.module.css";
 import { NavLink, Link, useLocation } from "react-router-dom";
+import { TLocationState } from "../../services/types/data";
 
 const AppHeader: FC = () => {
-  const location = useLocation();
+  const location = useLocation<TLocationState>();
   return (
     <header className={`${AppHeaderStyles.header} pt-4 pb-4`}>
       <div className={AppHeaderStyles.header__wrap}>

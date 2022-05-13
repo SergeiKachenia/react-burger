@@ -4,7 +4,8 @@ import { baseUrl, checkResponse } from "../../utils/utils";
 import { getCookie } from "../../utils/cookies";
 import { TIngredient } from "../types/data";
 import { AppDispatch } from "../../index";
-import { TRootState } from "../index";
+import { RootState } from "../../index";
+
 interface TIngredientState {
   ingredients: TIngredient[];
   loading: boolean;
@@ -35,11 +36,11 @@ const ingredientsSlice = createSlice({
   name: "ingredients",
   initialState,
   reducers: {
-    getIngredients: (state: TIngredientState) => {
+    getIngredients: (state) => {
       state.loading = true;
     },
     getIngredientsSuccess: (
-      state: TIngredientState,
+      state,
       { payload }: PayloadAction<TIngredient[]>
     ) => {
       state.loading = false;
@@ -47,14 +48,14 @@ const ingredientsSlice = createSlice({
       state.ingredients = payload;
     },
     getIngredientsFail: (
-      state: TIngredientState,
+      state,
       { payload }: PayloadAction<any>
     ) => {
       state.loading = false;
       state.error = payload;
     },
     showIngredientDetails: (
-      state: TIngredientState,
+      state,
       { payload }: PayloadAction<any>
     ) => {
       state.ingredientDetails = payload;
@@ -65,7 +66,7 @@ const ingredientsSlice = createSlice({
       state.activeIngredientDetailsModal = false;
     },
     addIngredientToCart: {
-      reducer: (state: TIngredientState, { payload }: PayloadAction<any>) => {
+      reducer: (state, { payload }: PayloadAction<any>) => {
         state.cartIngredients.push(payload);
         console.log({ payload });
       },
@@ -77,7 +78,7 @@ const ingredientsSlice = createSlice({
       },
     },
     deleteIngredientFromCart: (
-      state: TIngredientState,
+      state,
       { payload }: PayloadAction<{ type: string; _id: string }>
     ) => {
       if (payload.type === "bun")
@@ -93,14 +94,14 @@ const ingredientsSlice = createSlice({
         );
       }
     },
-    removeIngredientFromCart: (state: TIngredientState) => {
+    removeIngredientFromCart: (state) => {
       state.cartIngredients = [];
     },
-    sendOrderInProgress: (state: TIngredientState) => {
+    sendOrderInProgress: (state) => {
       state.loading = true;
     },
     sendOrderSuccess: (
-      state: TIngredientState,
+      state,
       { payload }: PayloadAction<{ order: { number: number }; name: string }>
     ) => {
       state.loading = false;
@@ -110,7 +111,7 @@ const ingredientsSlice = createSlice({
       state.orderModal = true;
     },
     sendOrderFail: (
-      state: TIngredientState,
+      state,
       { payload }: PayloadAction<any>
     ) => {
       state.loading = false;
@@ -118,10 +119,10 @@ const ingredientsSlice = createSlice({
       state.orderNumber = 0;
       state.orderName = "";
     },
-    closeOrderModal: (state: TIngredientState) => {
+    closeOrderModal: (state) => {
       state.orderModal = false;
     },
-    getTotalSum: (state: TIngredientState) => {
+    getTotalSum: (state) => {
       const cart = state.cartIngredients;
       let total = 0;
 
@@ -138,7 +139,7 @@ const ingredientsSlice = createSlice({
       state.totalSum = total;
     },
     dragIngredients: (
-      state: TIngredientState,
+      state,
       { payload }: PayloadAction<any>
     ) => {
       const ingredientsToChange = state.cartIngredients.filter(
@@ -175,7 +176,6 @@ export const {
 
 export const fetchIngredients = () => {
   return async (dispatch: AppDispatch) => {
-    // @ts-ignore
     dispatch(getIngredients());
     try {
       const res = await fetch(`${baseUrl}/ingredients`);
@@ -193,7 +193,6 @@ export const fetchIngredients = () => {
 
 export const sendOrderInfo = (ingredients: TIngredient[]) => {
   return async (dispatch: AppDispatch) => {
-    // @ts-ignore
     dispatch(sendOrderInProgress());
     console.log(initialState.loading);
     try {
@@ -208,7 +207,6 @@ export const sendOrderInfo = (ingredients: TIngredient[]) => {
       checkResponse(res);
       const actualData = await res.json();
       dispatch(sendOrderSuccess(actualData));
-      // @ts-ignore
       dispatch(removeIngredientFromCart());
     } catch (error: unknown) {
       if (typeof error === "string") console.log(error);
@@ -219,5 +217,5 @@ export const sendOrderInfo = (ingredients: TIngredient[]) => {
   };
 };
 
-export const ingredientsSelector = (state: TRootState) => state.ingredients;
+export const ingredientsSelector = (state: RootState) => state.ingredients;
 export const ingredientsReducer = ingredientsSlice.reducer;

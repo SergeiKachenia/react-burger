@@ -5,14 +5,16 @@ import { useAppSelector } from "../../index";
 import { nanoid } from "@reduxjs/toolkit";
 import { wsSelector } from "../../services/slice/websocket";
 import { useWebSocket } from "../../hooks/wsHook";
-
+import {TOrder, TIngredient} from "../../services/types/data";
+import { ingredientsSelector } from "../../services/slice/ingredients";
 export const FeedPage: FC = () => {
+  useWebSocket();
   const { feedOrders, wsConnected, total, totalToday } =
     useAppSelector(wsSelector);
-
-  useWebSocket();
   console.log(wsConnected);
+  const { ingredients } = useAppSelector(ingredientsSelector);
 
+  const ingId = ingredients.map((ingredient) =>ingredient._id)
   const filterStatus = (status: string) => {
     return feedOrders.filter((item) => item.status === status);
   };
@@ -27,12 +29,12 @@ export const FeedPage: FC = () => {
           </h1>
           <section className={`${FPStyles.feedPage__feeds} custom-scroll`}>
             {feedOrders &&
-              feedOrders.map((item: any) => (
-                // @ts-ignore
+              feedOrders.map((item: TOrder) => (
                 <OrdersList
                   key={item._id}
                   order={item}
-                  idIngredients={item.ingredients}
+                  idIngredients={item.ingredients.map((itemIng: TIngredient) => { console.log(itemIng)
+                    return itemIng})}
                   page="/feed"
                 />
               ))}
