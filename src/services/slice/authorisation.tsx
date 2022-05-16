@@ -2,13 +2,15 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { baseUrl, checkResponse } from "../../utils/utils";
 import { setCookie, getCookie, deleteCookie } from "../../utils/cookies";
 import { AppDispatch } from "../../index";
+import {RootState} from "../../index";
 import {
   IUserRegistration,
   IUserLogin,
   IForgotPassword,
   IResetPassword,
+  AppThunk
 } from "../types/data";
-import { RootState } from "../../index";
+import {ThunkDispatch} from 'redux-thunk'
 
 type TUserData = {
   email: string;
@@ -235,12 +237,13 @@ export const {
   getTokenSuccess,
   getTokenFailed,
 } = authSlice.actions;
+export const authActions = authSlice.actions;
 
 export const authSelector = (state: RootState) => state.auth;
 export const authReducer = authSlice.reducer;
 
-export const registerRequest = (form: IUserRegistration) => {
-  return async (dispatch: AppDispatch) => {
+export const registerRequest = (form: IUserRegistration): AppThunk => {
+  return async (dispatch) => {
     dispatch(registerInProgress());
     try {
       const res = await fetch(`${baseUrl}/auth/register`, {
@@ -260,8 +263,8 @@ export const registerRequest = (form: IUserRegistration) => {
   };
 };
 
-export const forgotPassRequest = (email: IForgotPassword) => {
-  return async (dispatch: AppDispatch) => {
+export const forgotPassRequest = (email: IForgotPassword): AppThunk  => {
+  return async (dispatch) => {
     dispatch(forgotPassInProgress());
     try {
       const res = await fetch(`${baseUrl}/password-reset`, {
@@ -281,8 +284,8 @@ export const forgotPassRequest = (email: IForgotPassword) => {
   };
 };
 
-export const resetPassRequest = (form: IResetPassword) => {
-  return async (dispatch: AppDispatch) => {
+export const resetPassRequest = (form: IResetPassword): AppThunk  => {
+  return async (dispatch) => {
     dispatch(resetPassInProgress());
     try {
       const res = await fetch(`${baseUrl}/password-reset/reset`, {
@@ -302,8 +305,8 @@ export const resetPassRequest = (form: IResetPassword) => {
   };
 };
 
-export const loginRequest = (form: IUserLogin) => {
-  return async (dispatch: AppDispatch) => {
+export const loginRequest = (form: IUserLogin): AppThunk  => {
+  return async (dispatch) => {
     dispatch(loginInProgress());
     try {
       const res = await fetch(`${baseUrl}/auth/login`, {
@@ -323,8 +326,8 @@ export const loginRequest = (form: IUserLogin) => {
   };
 };
 
-export const logoutRequest = () => {
-  return async (dispatch: AppDispatch) => {
+export const logoutRequest = (): AppThunk  => {
+  return async (dispatch) => {
     dispatch(logoutInProgress());
     try {
       const res = await fetch(`${baseUrl}/auth/logout`, {
@@ -343,9 +346,12 @@ export const logoutRequest = () => {
     }
   };
 };
+const getPromise = () => {
+  Promise.resolve(Error);
+};
 
-export const getUserRequest = () => {
-  return async (dispatch: AppDispatch) => {
+export const getUserRequest = (): AppThunk<Promise<any>>  => {
+  return async (dispatch) => {
     dispatch(getUserInProgress());
     try {
       const res = await fetch(`${baseUrl}/auth/user`, {
@@ -362,7 +368,8 @@ export const getUserRequest = () => {
       if (typeof error === "string") console.log(error);
       else if (error instanceof Error) {
         if (error.message === "Error status - 403") {
-          dispatch(getTokenRequest()).then(() => dispatch(getUserRequest()));
+        dispatch(getTokenRequest())
+        await dispatch(getUserRequest());
         }
         dispatch(getUserFailed(error.message));
       }
@@ -370,8 +377,8 @@ export const getUserRequest = () => {
   };
 };
 
-export const updateUserRequest = (form: IUserRegistration) => {
-  return async (dispatch: AppDispatch) => {
+export const updateUserRequest = (form: IUserRegistration): AppThunk<Promise<any>> => {
+  return async (dispatch) => {
     dispatch(updateUserInProgress());
     try {
       const res = await fetch(`${baseUrl}/auth/user`, {
@@ -389,9 +396,8 @@ export const updateUserRequest = (form: IUserRegistration) => {
       if (typeof error === "string") console.log(error);
       else if (error instanceof Error) {
         if (error.message === "Error status - 403") {
-          dispatch(getTokenRequest()).then(() =>
-            dispatch(updateUserRequest(form))
-          );
+          dispatch(getTokenRequest())
+          await dispatch(updateUserRequest(form))
         }
         dispatch(updateUserFailed(error.message));
       }
@@ -399,8 +405,8 @@ export const updateUserRequest = (form: IUserRegistration) => {
   };
 };
 
-export const getTokenRequest = () => {
-  return async (dispatch: AppDispatch) => {
+export const getTokenRequest = (): AppThunk  => {
+  return async (dispatch) => {
     dispatch(getTokenInProgress());
     try {
       const res = await fetch(`${baseUrl}/auth/token`, {

@@ -28,7 +28,8 @@ export const OrdersPage: FC = () => {
               <OrdersList
                 key={item._id}
                 order={item}
-                idIngredients={[item._id]}
+                //@ts-ignore
+                idIngredients={item.ingredients}
                 page={page}
               />
             ))}

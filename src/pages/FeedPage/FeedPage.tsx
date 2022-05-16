@@ -5,16 +5,13 @@ import { useAppSelector } from "../../index";
 import { nanoid } from "@reduxjs/toolkit";
 import { wsSelector } from "../../services/slice/websocket";
 import { useWebSocket } from "../../hooks/wsHook";
-import {TOrder, TIngredient} from "../../services/types/data";
-import { ingredientsSelector } from "../../services/slice/ingredients";
+import {TOrder} from "../../services/types/data";
+
 export const FeedPage: FC = () => {
   useWebSocket();
   const { feedOrders, wsConnected, total, totalToday } =
     useAppSelector(wsSelector);
   console.log(wsConnected);
-  const { ingredients } = useAppSelector(ingredientsSelector);
-
-  const ingId = ingredients.map((ingredient) =>ingredient._id)
   const filterStatus = (status: string) => {
     return feedOrders.filter((item) => item.status === status);
   };
@@ -33,8 +30,8 @@ export const FeedPage: FC = () => {
                 <OrdersList
                   key={item._id}
                   order={item}
-                  idIngredients={item.ingredients.map((itemIng: TIngredient) => { console.log(itemIng)
-                    return itemIng})}
+                  // @ts-ignore
+                  idIngredients={item.ingredients}
                   page="/feed"
                 />
               ))}

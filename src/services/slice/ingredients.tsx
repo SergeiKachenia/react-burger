@@ -2,8 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
 import { baseUrl, checkResponse } from "../../utils/utils";
 import { getCookie } from "../../utils/cookies";
-import { TIngredient } from "../types/data";
-import { AppDispatch } from "../../index";
+import { TIngredient, AppThunk } from "../types/data";
+import { useAppDispatch } from "../../index";
 import { RootState } from "../../index";
 
 interface TIngredientState {
@@ -173,9 +173,10 @@ export const {
   dragIngredients,
   removeIngredientFromCart,
 } = ingredientsSlice.actions;
+export const ingrActions = ingredientsSlice.actions;
 
-export const fetchIngredients = () => {
-  return async (dispatch: AppDispatch) => {
+export const fetchIngredients = (): AppThunk  => {
+  return async (dispatch) => {
     dispatch(getIngredients());
     try {
       const res = await fetch(`${baseUrl}/ingredients`);
@@ -191,8 +192,8 @@ export const fetchIngredients = () => {
   };
 };
 
-export const sendOrderInfo = (ingredients: TIngredient[]) => {
-  return async (dispatch: AppDispatch) => {
+export const sendOrderInfo = (ingredients: TIngredient[]): AppThunk  => {
+  return async (dispatch) => {
     dispatch(sendOrderInProgress());
     console.log(initialState.loading);
     try {

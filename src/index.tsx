@@ -6,7 +6,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import rootReducer from "./services/index";
 import { BrowserRouter as Router } from "react-router-dom";
 import { wsMiddleware } from "./services/middleware/wsMiddleware";
-import { actions } from "./services/slice/websocket";
+import { WSActions } from "./services/slice/websocket";
 import React from "react"
 
 
@@ -18,7 +18,8 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(wsMiddleware(actions)),
+    getDefaultMiddleware().concat(wsMiddleware(WSActions)),
+
 });
 
 render(

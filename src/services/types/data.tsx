@@ -1,4 +1,7 @@
 import { Location } from "history";
+import { RootState } from "../../index";
+import { AnyAction, ActionCreator } from 'redux';
+import { ThunkAction } from 'redux-thunk';
 
 export type TIngredient = {
   readonly id?: string;
@@ -57,3 +60,10 @@ export type TLocationState = {
   background?: Location<TLocationState>;
   from?: { pathname: string };
 };
+
+export type AppThunk<ReturnType = void> = ThunkAction<
+  ReturnType,
+  RootState,
+  unknown,
+  AnyAction
+>

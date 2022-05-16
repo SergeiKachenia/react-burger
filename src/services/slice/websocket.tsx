@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TOrder} from "../types/data";
+import { TOrder } from "../types/data";
 import { RootState } from "../../index";
 interface IWSState {
   webSocket: null;
@@ -65,7 +65,7 @@ export const {
   closedWSConnection,
   errorWSConnection,
 } = wsSlice.actions;
-export const actions = wsSlice.actions;
+export const WSActions = wsSlice.actions;
 
 export const wsSelector = (state: RootState) => state.webSocket;
 export const webSocketReducer = wsSlice.reducer;
