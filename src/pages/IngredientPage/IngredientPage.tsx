@@ -1,14 +1,14 @@
 import { IngredientDetails } from "../../components/IngredientDetails/IngredientDetails";
-import { useSelector } from "react-redux";
+
 import { useParams } from "react-router-dom";
 import { ingredientsSelector } from "../../services/slice/ingredients";
 import IPStyles from "./IngredientPage.module.css";
+import { useAppSelector } from "../../index";
+import { FC } from "react";
+export const IngredientPage: FC = () => {
 
-export const IngredientPage = () => {
-  //@ts-ignore
-  const { id } = useParams();
-  console.log(id);
-  const { ingredients } = useSelector(ingredientsSelector);
+  const { id } = useParams<{ id: string }>();
+  const { ingredients } = useAppSelector(ingredientsSelector);
   const currentIngredient = ingredients.find((item) => item._id === id);
 
   return (

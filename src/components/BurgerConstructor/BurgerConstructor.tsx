@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, FC } from "react";
 import {
   ConstructorElement,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import ConstructorStyles from "./BurgerConstructor.module.css";
-import { AppPropsItem } from "../../utils/types";
 import Modal from "../Modal/Modal";
 import OrderDetails from "../OrderDetails/OrderDetails";
-import { useSelector, useDispatch } from "react-redux";
+import { useAppSelector, useAppDispatch } from "../../index";
 import { useDrop } from "react-dnd";
 import {
   ingredientsSelector,
@@ -21,13 +20,14 @@ import {
 import ConstructorItem from "../ConstructorItem/ConstructorItem";
 import { authSelector } from "../../services/slice/authorisation";
 import { useHistory } from "react-router-dom";
+import { TIngredient } from "../../services/types/data";
 
-function BurgerConstructor() {
-  const { auth } = useSelector(authSelector);
-  const dispatch = useDispatch();
+const BurgerConstructor: FC = () => {
+  const { auth } = useAppSelector(authSelector);
+  const dispatch = useAppDispatch();
   const history = useHistory();
-  const { totalSum, cartIngredients, orderModal, loading} =
-    useSelector(ingredientsSelector);
+  const { totalSum, cartIngredients, orderModal, loading } =
+    useAppSelector(ingredientsSelector);
 
   const bun = cartIngredients.find((item) => item.type === "bun");
   const other = cartIngredients.filter((item) => item.type !== "bun");
@@ -55,12 +55,12 @@ function BurgerConstructor() {
     if (auth) {
       // @ts-ignore
       dispatch(sendOrderInProgress());
-      dispatch(sendOrderInfo(cartIngredients))
+      dispatch(sendOrderInfo(cartIngredients));
     } else {
       // @ts-ignore
       history.replace({ pathname: "/login" });
-  }
-}
+    }
+  };
 
   const border = isHover ? "#4C4CFF 3px solid" : "none";
 
@@ -102,7 +102,7 @@ function BurgerConstructor() {
           className={`${ConstructorStyles.constructor__list} custom-scroll mt-4 mb-4`}
         >
           {other.length !== 0 &&
-            other.map((item: AppPropsItem, index: number) => (
+            other.map((item: TIngredient, index: number) => (
               // @ts-ignore
               <ConstructorItem item={item} index={index} key={item.id} />
             ))}
@@ -161,16 +161,17 @@ function BurgerConstructor() {
               {
                 sendOrder();
               }
-
             }}
-            disabled={loading? true : false}
+            disabled={loading ? true : false}
           >
-            <span className="text text_type_main-default">{loading?'Заказ оформляется, подождите...':'Оформить заказ'}</span>
+            <span className="text text_type_main-default">
+              {loading ? "Заказ оформляется, подождите..." : "Оформить заказ"}
+            </span>
           </Button>
         </section>
       )}
     </section>
   );
-}
+};
 
 export default BurgerConstructor;

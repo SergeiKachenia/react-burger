@@ -1,8 +1,35 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { baseUrl, checkResponse } from "../../utils/utils";
 import { setCookie, getCookie, deleteCookie } from "../../utils/cookies";
+import { AppDispatch } from "../../index";
+import {RootState} from "../../index";
+import {
+  IUserRegistration,
+  IUserLogin,
+  IForgotPassword,
+  IResetPassword,
+  AppThunk
+} from "../types/data";
+import {ThunkDispatch} from 'redux-thunk'
 
-export const initialState = {
+type TUserData = {
+  email: string;
+  password: string;
+  name: string;
+  token: string;
+  refreshToken: string;
+};
+
+interface IAuthState {
+  auth: boolean;
+  loading: boolean;
+  error: string;
+  forgotPassReqSuccess: boolean;
+  resetPassReqSuccess: boolean;
+  userData: TUserData;
+}
+
+export const initialState: IAuthState = {
   auth: false,
   loading: false,
   error: "",
@@ -12,6 +39,8 @@ export const initialState = {
     email: "",
     password: "",
     name: "",
+    token: null,
+    refreshToken: null,
   },
 };
 
@@ -34,7 +63,16 @@ const authSlice = createSlice({
     registerInProgress: (state) => {
       state.loading = true;
     },
-    registerSuccess: (state, { payload }) => {
+    registerSuccess: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{
+        user: { name: string; email: string };
+        accessToken: string;
+        refreshToken: string;
+      }>
+    ) => {
       state.loading = false;
       state.auth = true;
       state.userData.name = payload.user.name;
@@ -43,36 +81,45 @@ const authSlice = createSlice({
       setCookie("accessToken", payload.accessToken, {});
       setCookie("refreshToken", payload.refreshToken, {});
     },
-    registerFailed: (state, { payload }) => {
+    registerFailed: (state, { payload }: PayloadAction<any>) => {
       state.loading = false;
       state.error = `Зарегистрироваться не удалось: ${payload}`;
     },
     forgotPassInProgress: (state) => {
       state.loading = true;
     },
-    forgotPassSuccess: (state, { payload }) => {
+    forgotPassSuccess: (state, { payload }: PayloadAction<any>) => {
       state.loading = false;
       state.forgotPassReqSuccess = true;
     },
-    forgotPassFailed: (state, { payload }) => {
+    forgotPassFailed: (state, { payload }: PayloadAction<any>) => {
       state.loading = false;
       state.error = `Код отправить не удалось. Проблема: ${payload}`;
     },
     resetPassInProgress: (state) => {
       state.loading = true;
     },
-    resetPassSuccess: (state, { payload }) => {
+    resetPassSuccess: (state, { payload }: PayloadAction<any>) => {
       state.loading = false;
       state.resetPassReqSuccess = true;
     },
-    resetPassFailed: (state, { payload }) => {
+    resetPassFailed: (state, { payload }: PayloadAction<any>) => {
       state.loading = false;
       state.error = `Ваш пароль изменить не удалось. Проблема: ${payload}`;
     },
     loginInProgress: (state) => {
       state.loading = true;
     },
-    loginSuccess: (state, { payload }) => {
+    loginSuccess: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{
+        user: { name: string; email: string };
+        accessToken: string;
+        refreshToken: string;
+      }>
+    ) => {
       state.loading = false;
       state.auth = true;
       state.userData.name = payload.user.name;
@@ -81,7 +128,7 @@ const authSlice = createSlice({
       setCookie("accessToken", payload.accessToken, { expires: 20 * 60 });
       setCookie("refreshToken", payload.refreshToken, {});
     },
-    loginFailed: (state, { payload }) => {
+    loginFailed: (state, { payload }: PayloadAction<any>) => {
       state.loading = false;
       state.error = `В аккаунт войти не удалось. Проблема: ${payload}`;
     },
@@ -97,20 +144,23 @@ const authSlice = createSlice({
       deleteCookie("accessToken");
       deleteCookie("refreshToken");
     },
-    logoutFailed: (state, { payload }) => {
+    logoutFailed: (state, { payload }: PayloadAction<any>) => {
       state.loading = false;
       state.error = `Не удалось выйти из аккаунта. Проблема: ${payload}`;
     },
-    getUserInProgress: (state) => {
+    getUserInProgress: (state: IAuthState) => {
       state.loading = true;
     },
-    getUserSuccess: (state, { payload }) => {
+    getUserSuccess: (
+      state,
+      { payload }: PayloadAction<{ user: { name: string; email: string } }>
+    ) => {
       state.userData.name = payload.user.name;
       state.userData.email = payload.user.email;
       state.userData.password = "";
       state.auth = true;
     },
-    getUserFailed: (state, { payload }) => {
+    getUserFailed: (state, { payload }: PayloadAction<any>) => {
       state.userData.name = "";
       state.userData.email = "";
       state.userData.password = "";
@@ -121,13 +171,16 @@ const authSlice = createSlice({
     updateUserInProgress: (state) => {
       state.loading = true;
     },
-    updateUserSuccess: (state, { payload }) => {
+    updateUserSuccess: (
+      state: IAuthState,
+      { payload }: PayloadAction<{ user: { name: string; email: string } }>
+    ) => {
       state.userData.name = payload.user.name;
       state.userData.email = payload.user.email;
       state.userData.password = "";
       state.auth = true;
     },
-    updateUserFailed: (state, { payload }) => {
+    updateUserFailed: (state, { payload }: PayloadAction<any>) => {
       state.userData.name = "";
       state.userData.email = "";
       state.userData.password = "";
@@ -138,12 +191,15 @@ const authSlice = createSlice({
     getTokenInProgress: (state) => {
       state.loading = true;
     },
-    getTokenSuccess: (state, { payload }) => {
+    getTokenSuccess: (
+      state: IAuthState,
+      { payload }: PayloadAction<{ accessToken: string; refreshToken: string }>
+    ) => {
       setCookie("accessToken", payload.accessToken, {});
       setCookie("refreshToken", payload.refreshToken, {});
       state.auth = true;
     },
-    getTokenFailed: (state, { payload }) => {
+    getTokenFailed: (state, { payload }: PayloadAction<any>) => {
       state.auth = false;
       state.loading = false;
       state.error = `Проблема: ${payload}`;
@@ -181,11 +237,12 @@ export const {
   getTokenSuccess,
   getTokenFailed,
 } = authSlice.actions;
+export const authActions = authSlice.actions;
 
-export const authSelector = (state) => state.auth;
+export const authSelector = (state: RootState) => state.auth;
 export const authReducer = authSlice.reducer;
 
-export const registerRequest = (form) => {
+export const registerRequest = (form: IUserRegistration): AppThunk => {
   return async (dispatch) => {
     dispatch(registerInProgress());
     try {
@@ -197,13 +254,16 @@ export const registerRequest = (form) => {
       checkResponse(res);
       const actualData = await res.json();
       dispatch(registerSuccess(actualData));
-    } catch (error) {
-      dispatch(registerFailed(error.message));
+    } catch (error: unknown) {
+      if (typeof error === "string") console.log(error);
+      else if (error instanceof Error) {
+        dispatch(registerFailed(error.message));
+      }
     }
   };
 };
 
-export const forgotPassRequest = (email) => {
+export const forgotPassRequest = (email: IForgotPassword): AppThunk  => {
   return async (dispatch) => {
     dispatch(forgotPassInProgress());
     try {
@@ -215,13 +275,16 @@ export const forgotPassRequest = (email) => {
       checkResponse(res);
       const actualData = await res.json();
       dispatch(forgotPassSuccess(actualData));
-    } catch (error) {
-      dispatch(forgotPassFailed(error.message));
+    } catch (error: unknown) {
+      if (typeof error === "string") console.log(error);
+      else if (error instanceof Error) {
+        dispatch(forgotPassFailed(error.message));
+      }
     }
   };
 };
 
-export const resetPassRequest = (form) => {
+export const resetPassRequest = (form: IResetPassword): AppThunk  => {
   return async (dispatch) => {
     dispatch(resetPassInProgress());
     try {
@@ -233,13 +296,16 @@ export const resetPassRequest = (form) => {
       checkResponse(res);
       const actualData = await res.json();
       dispatch(resetPassSuccess(actualData));
-    } catch (error) {
-      dispatch(resetPassFailed(error.message));
+    } catch (error: unknown) {
+      if (typeof error === "string") console.log(error);
+      else if (error instanceof Error) {
+        dispatch(resetPassFailed(error.message));
+      }
     }
   };
 };
 
-export const loginRequest = (form) => {
+export const loginRequest = (form: IUserLogin): AppThunk  => {
   return async (dispatch) => {
     dispatch(loginInProgress());
     try {
@@ -251,13 +317,16 @@ export const loginRequest = (form) => {
       checkResponse(res);
       const actualData = await res.json();
       dispatch(loginSuccess(actualData));
-    } catch (error) {
-      dispatch(loginFailed(error.message));
+    } catch (error: unknown) {
+      if (typeof error === "string") console.log(error);
+      else if (error instanceof Error) {
+        dispatch(loginFailed(error.message));
+      }
     }
   };
 };
 
-export const logoutRequest = () => {
+export const logoutRequest = (): AppThunk  => {
   return async (dispatch) => {
     dispatch(logoutInProgress());
     try {
@@ -269,13 +338,19 @@ export const logoutRequest = () => {
       checkResponse(res);
       const actualData = await res.json();
       dispatch(logoutSuccess());
-    } catch (error) {
-      dispatch(logoutFailed(error.message));
+    } catch (error: unknown) {
+      if (typeof error === "string") console.log(error);
+      else if (error instanceof Error) {
+        dispatch(logoutFailed(error.message));
+      }
     }
   };
 };
+const getPromise = () => {
+  Promise.resolve(Error);
+};
 
-export const getUserRequest = () => {
+export const getUserRequest = (): AppThunk<Promise<any>>  => {
   return async (dispatch) => {
     dispatch(getUserInProgress());
     try {
@@ -289,17 +364,20 @@ export const getUserRequest = () => {
       checkResponse(res);
       const actualData = await res.json();
       dispatch(getUserSuccess(actualData));
-    } catch (error) {
-      console.log(error.message);
-      if (error.message === "Error status - 403") {
-        dispatch(getTokenRequest()).then(() => dispatch(getUserRequest()));
+    } catch (error: unknown) {
+      if (typeof error === "string") console.log(error);
+      else if (error instanceof Error) {
+        if (error.message === "Error status - 403") {
+        dispatch(getTokenRequest())
+        await dispatch(getUserRequest());
+        }
+        dispatch(getUserFailed(error.message));
       }
-      dispatch(getUserFailed(error.message));
     }
   };
 };
 
-export const updateUserRequest = (form) => {
+export const updateUserRequest = (form: IUserRegistration): AppThunk<Promise<any>> => {
   return async (dispatch) => {
     dispatch(updateUserInProgress());
     try {
@@ -314,19 +392,20 @@ export const updateUserRequest = (form) => {
       checkResponse(res);
       const actualData = await res.json();
       dispatch(updateUserSuccess(actualData));
-    } catch (error) {
-      console.log(error.message);
-      if (error.message === "Error status - 403") {
-        dispatch(getTokenRequest()).then(() =>
-          dispatch(updateUserRequest(form))
-        );
+    } catch (error: unknown) {
+      if (typeof error === "string") console.log(error);
+      else if (error instanceof Error) {
+        if (error.message === "Error status - 403") {
+          dispatch(getTokenRequest())
+          await dispatch(updateUserRequest(form))
+        }
+        dispatch(updateUserFailed(error.message));
       }
-      dispatch(updateUserFailed(error.message));
     }
   };
 };
 
-export const getTokenRequest = () => {
+export const getTokenRequest = (): AppThunk  => {
   return async (dispatch) => {
     dispatch(getTokenInProgress());
     try {
@@ -338,8 +417,11 @@ export const getTokenRequest = () => {
       checkResponse(res);
       const actualData = await res.json();
       dispatch(getTokenSuccess(actualData));
-    } catch (error) {
-      dispatch(getTokenFailed(error.message));
+    } catch (error: unknown) {
+      if (typeof error === "string") console.log(error);
+      else if (error instanceof Error) {
+        dispatch(getTokenFailed(error.message));
+      }
     }
   };
 };

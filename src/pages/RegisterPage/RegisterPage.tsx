@@ -1,7 +1,6 @@
 import { Redirect, Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import RPStyles from "./RegisterPage.module.css";
-import { useDispatch, useSelector } from "react-redux";
 import {
   Button,
   Input,
@@ -12,19 +11,23 @@ import {
   authSelector,
   resetError,
 } from "../../services/slice/authorisation";
+import { useAppSelector, useAppDispatch } from "../../index";
+import { IUserRegistration } from "../../services/types/data";
+import { FC, FormEvent } from "react";
+import { TLocationState } from "../../services/types/data";
 
-export const RegisterPage = () => {
-  const [formData, addFormData] = useState({
+export const RegisterPage: FC = () => {
+  const [formData, addFormData] = useState<IUserRegistration>({
     email: "",
     password: "",
     name: "",
   });
 
-  const location = useLocation();
-  const dispatch = useDispatch();
-  const { error, auth } = useSelector(authSelector);
+  const location = useLocation<TLocationState>();
+  const dispatch = useAppDispatch();
+  const { error, auth } = useAppSelector(authSelector);
 
-  const changeFormData = (e) => {
+  const changeFormData = (e: { target: { name: string; value: string } }) => {
     addFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -34,7 +37,7 @@ export const RegisterPage = () => {
     dispatch(resetError());
   }, []);
 
-  const sendRegistrationForm = (e) => {
+  const sendRegistrationForm = (e: FormEvent) => {
     e.preventDefault();
     // @ts-ignore
     dispatch(registerRequest(formData));

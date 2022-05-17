@@ -1,11 +1,11 @@
-import { Route } from "react-router-dom";
+import { Route, RouteProps } from "react-router-dom";
 import { Redirect } from "react-router-dom";
 import { authSelector } from "../../services/slice/authorisation";
-import { useSelector } from "react-redux";
+import { FC } from "react";
+import { useAppSelector } from "../../index";
 
-
-export const ProtectedRoute = ({ children, ...rest }) => {
-  const { auth } = useSelector(authSelector);
+export const ProtectedRoute: FC<RouteProps> = ({ children, ...rest }) => {
+  const { auth } = useAppSelector(authSelector);
 
   return (
     <Route

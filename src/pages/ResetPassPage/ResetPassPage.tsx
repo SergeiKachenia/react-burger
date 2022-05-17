@@ -1,7 +1,6 @@
 import { Redirect, Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import RPPStyles from "./ResetPassPage.module.css";
-import { useDispatch, useSelector } from "react-redux";
 import {
   Button,
   Input,
@@ -12,18 +11,21 @@ import {
   resetPassRequest,
   authSelector,
 } from "../../services/slice/authorisation";
+import { useAppSelector, useAppDispatch } from "../../index";
+import { IResetPassword, TLocationState } from "../../services/types/data";
+import { FC, FormEvent } from "react";
 
-export const ResetPassPage = () => {
-  const [formData, addFormData] = useState({
+export const ResetPassPage: FC = () => {
+  const [formData, addFormData] = useState<IResetPassword>({
     password: "",
     token: "",
   });
-  const location = useLocation();
-  const dispatch = useDispatch();
+  const location = useLocation<TLocationState>();
+  const dispatch = useAppDispatch();
   const { resetPassReqSuccess, error, auth, forgotPassReqSuccess } =
-    useSelector(authSelector);
+    useAppSelector(authSelector);
 
-  const changeFormData = (e) => {
+  const changeFormData = (e: { target: { name: string; value: string } }) => {
     addFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -34,7 +36,7 @@ export const ResetPassPage = () => {
     dispatch(resetError());
   }, []);
 
-  const sendResetPassForm = (e) => {
+  const sendResetPassForm = (e: FormEvent) => {
     e.preventDefault();
     // @ts-ignore
     dispatch(resetPassRequest(formData));

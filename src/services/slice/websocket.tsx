@@ -1,6 +1,16 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { TOrder } from "../types/data";
+import { RootState } from "../../index";
+interface IWSState {
+  webSocket: null;
+  wsConnected: boolean;
+  wsError: boolean;
+  feedOrders: TOrder[];
+  total: string;
+  totalToday: string;
+}
 
-const initialState = {
+const initialState: IWSState = {
   webSocket: null,
   wsConnected: false,
   wsError: false,
@@ -13,7 +23,7 @@ export const wsSlice = createSlice({
   name: "webSocket",
   initialState,
   reducers: {
-    startWSConnection: (state, { payload }) => {},
+    startWSConnection: (state, { payload }: PayloadAction<any>) => {},
     stopWSConnection: (state) => {
       state.wsConnected = false;
       state.wsError = false;
@@ -22,12 +32,17 @@ export const wsSlice = createSlice({
       state.wsConnected = true;
       state.wsError = false;
     },
-    getWSMessage: (state, { payload }) => {
+    getWSMessage: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{ orders: TOrder[]; total: string; totalToday: string }>
+    ) => {
       state.feedOrders = payload.orders;
       state.total = payload.total;
       state.totalToday = payload.totalToday;
     },
-    sendWSMessage: (state, { payload }) => {},
+    sendWSMessage: (state, { payload }: PayloadAction<any>) => {},
 
     closedWSConnection: (state) => {
       state.wsConnected = false;
@@ -50,7 +65,7 @@ export const {
   closedWSConnection,
   errorWSConnection,
 } = wsSlice.actions;
-export const actions = wsSlice.actions;
+export const WSActions = wsSlice.actions;
 
-export const wsSelector = (state) => state.webSocket;
+export const wsSelector = (state: RootState) => state.webSocket;
 export const webSocketReducer = wsSlice.reducer;

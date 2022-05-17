@@ -1,4 +1,4 @@
-import React from "react";
+import { FC } from "react";
 import {
   Logo,
   BurgerIcon,
@@ -7,9 +7,10 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import AppHeaderStyles from "./AppHeader.module.css";
 import { NavLink, Link, useLocation } from "react-router-dom";
+import { TLocationState } from "../../services/types/data";
 
-function AppHeader() {
-  const location = useLocation();
+const AppHeader: FC = () => {
+  const location = useLocation<TLocationState>();
   return (
     <header className={`${AppHeaderStyles.header} pt-4 pb-4`}>
       <div className={AppHeaderStyles.header__wrap}>
@@ -82,6 +83,6 @@ function AppHeader() {
       </div>
     </header>
   );
-}
+};
 
 export default AppHeader;

@@ -7,10 +7,13 @@ import {
 } from "../services/slice/websocket";
 import { getCookie } from "../utils/cookies";
 import { wsUrl } from "../utils/utils";
+import { TLocationState } from "../services/types/data";
+import { useAppDispatch } from "../index";
 
 export const useWebSocket = () => {
-  const location = useLocation();
-  const dispatch = useDispatch();
+
+  const location = useLocation<TLocationState>();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (location.pathname.startsWith("/feed")) {

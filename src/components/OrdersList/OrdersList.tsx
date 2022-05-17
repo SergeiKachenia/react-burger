@@ -1,43 +1,51 @@
 import OLStyles from "./OrdersList.module.css";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../index";
 import { ImagesList } from "../ImagesList/ImagesList";
 import { getStatus, getDate } from "../../utils/utils";
 import { ingredientsSelector } from "../../services/slice/ingredients";
 import { Link, useLocation } from "react-router-dom";
-import PropTypes from "prop-types";
+import { FC } from "react";
+import { TOrder } from "../../services/types/data";
+import { TLocationState} from "../../services/types/data";
+import {TIngredient } from "../../services/types/data"
+interface IOrdersListProps {
+  order: TOrder;
+  idIngredients: string[];
+  page: string;
+}
 
-export const OrdersList = ({ order, idIngredients, page }) => {
-  const location = useLocation();
-  const { ingredients } = useSelector(ingredientsSelector);
+export const OrdersList: FC<IOrdersListProps> = ({
+  order,
+  idIngredients,
+  page
+}) => {
+  const location = useLocation<TLocationState>();
+  const { ingredients } = useAppSelector(ingredientsSelector);
 
-  const searchIngredient = (value) => {
-    // @ts-ignore
-    return ingredients.filter((ingredient) => ingredient._id === value);
+  const searchIngredient = (value: string) => {
+    const ingrID =  ingredients.filter((ingredient) => ingredient._id === value);
+    return ingrID;
   };
-  const searchIngredientsImages = (id) => {
-    return id.map((item) => {
+  const searchIngredientsImages = (id: TIngredient['_id'][]) => {
+    return id.map((item: string) => {
       const imagesList = searchIngredient(item);
-      // @ts-ignore
       if (imagesList.length) {
-        // @ts-ignore
         return imagesList[0].image;
       }
     });
   };
 
-  const searchIngredientsPrice = (id) => {
-    return id.map((item) => {
+  const searchIngredientsPrice = (id: TIngredient['_id'][]) => {
+    return id.map((item: string) => {
       const priceList = searchIngredient(item);
-      // @ts-ignore
       if (priceList.length) {
-        // @ts-ignore
         return priceList[0].price;
       }
     });
   };
   const price = searchIngredientsPrice(idIngredients).reduce(
-    (acc, price) => acc + price,
+    (acc: number, price: number) => acc + price,
     0
   );
 

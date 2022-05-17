@@ -1,13 +1,13 @@
-export const checkResponse = (res) => {
+export const checkResponse = (res: Response) => {
   if (!res.ok) {
     throw new Error(`Error status - ${res.status}`);
   }
 };
 
-export const baseUrl = "https://norma.nomoreparties.space/api";
-export const wsUrl = "wss://norma.nomoreparties.space";
+export const baseUrl: string = "https://norma.nomoreparties.space/api";
+export const wsUrl: string = "wss://norma.nomoreparties.space";
 
-export function getStatus(status) {
+export function getStatus(status: string) {
   switch (status) {
     case "done":
       return "Выполнен";
@@ -20,7 +20,7 @@ export function getStatus(status) {
   }
 }
 
-export const getDate = (date) => {
+export const getDate = (date: string) => {
   const currentDate = new Date();
   const formattedDate = new Date(date);
   const differenceData = currentDate.getTime() - formattedDate.getTime();

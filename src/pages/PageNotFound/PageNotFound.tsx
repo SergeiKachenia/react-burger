@@ -1,7 +1,8 @@
 import PNFStyles from "./PageNotFound.module.css";
 import { Link } from "react-router-dom";
+import { FC } from "react";
 
-export const PageNotFound = () => {
+export const PageNotFound: FC = () => {
   return (
     <div className={PNFStyles.pageNotFound__main}>
       <span className="text_type_main-large">404 - Страница не найдена</span>

@@ -1,19 +1,18 @@
-import React from "react";
+import { FC } from "react";
 import FPStyles from "./FeedPage.module.css";
 import { OrdersList } from "../../components/OrdersList/OrdersList";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../index";
 import { nanoid } from "@reduxjs/toolkit";
 import { wsSelector } from "../../services/slice/websocket";
 import { useWebSocket } from "../../hooks/wsHook";
+import {TOrder} from "../../services/types/data";
 
-export const FeedPage = () => {
-  const { feedOrders, wsConnected, total, totalToday } =
-    useSelector(wsSelector);
-
+export const FeedPage: FC = () => {
   useWebSocket();
+  const { feedOrders, wsConnected, total, totalToday } =
+    useAppSelector(wsSelector);
   console.log(wsConnected);
-
-  const filterStatus = (status) => {
+  const filterStatus = (status: string) => {
     return feedOrders.filter((item) => item.status === status);
   };
   return (
@@ -27,11 +26,11 @@ export const FeedPage = () => {
           </h1>
           <section className={`${FPStyles.feedPage__feeds} custom-scroll`}>
             {feedOrders &&
-              feedOrders.map((item: any) => (
-                // @ts-ignore
+              feedOrders.map((item: TOrder) => (
                 <OrdersList
                   key={item._id}
                   order={item}
+                  // @ts-ignore
                   idIngredients={item.ingredients}
                   page="/feed"
                 />
